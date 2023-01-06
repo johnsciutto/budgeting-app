@@ -83,7 +83,7 @@ class Validation {
    * @returns {boolean} - True if the value is a valid amount, false otherwise.
    */
   static _isValidAmount(amount) {
-    return amount && typeof amount === 'number' && !isNaN(amount);
+    return typeof amount === 'number' && !isNaN(amount);
   }
 
   /**
@@ -93,7 +93,7 @@ class Validation {
    * @returns {boolean} - True if the value is a valid date, false otherwise.
    */
   static _isValidDate(date) {
-    return date && date instanceof Date;
+    return date instanceof Date;
   }
 
   /**
