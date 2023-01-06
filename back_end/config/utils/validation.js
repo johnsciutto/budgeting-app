@@ -59,7 +59,6 @@ class Validation {
    * @returns {object} response
    * @property {boolean} response.ok
    * @property {string | undefined} response.error
-   * TODO: Test
    */
   static isEmailValid(email) {
     const { EMAIL_REGEX } = this.RULES.EMAIL;
@@ -77,17 +76,37 @@ class Validation {
     return response;
   }
 
-  // TODO: Document
+  /**
+   * Determines if the provided value is a valid amount.
+   *
+   * @param {number} amount - The value to be checked.
+   * @returns {boolean} - True if the value is a valid amount, false otherwise.
+   */
   static _isValidAmount(amount) {
     return amount && typeof amount === 'number' && !isNaN(amount);
   }
 
-  // TODO: Document
+  /**
+   * Determines if the provided value is a valid date.
+   *
+   * @param {Date} date - The value to be checked.
+   * @returns {boolean} - True if the value is a valid date, false otherwise.
+   */
   static _isValidDate(date) {
     return date && date instanceof Date;
   }
 
-  // TODO: Document
+  /**
+   * Determines if the provided transaction object is valid.
+   *
+   * @param {Object} transaction - The transaction object to be validated.
+   * @property {string} transaction.name - The name of the transaction.
+   * @property {number} transaction.amount - The amount of the transaction.
+   * @property {Date} transaction.date - The date of the transaction.
+   * @returns {Object} response - An object with two properties:
+   * @property {boolean} response.ok: a boolean indicating whether the transaction is valid
+   * @property {string | null} response.error: an error message if the transaction is not valid, null otherwise
+   */
   static isValidTransaction(transaction) {
     const response = { ok: true, error: null };
     try {
