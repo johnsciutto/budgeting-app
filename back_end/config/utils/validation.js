@@ -31,6 +31,11 @@ class Validation {
     const response = { ok: true, error: null };
 
     try {
+      if (typeof password !== 'string') {
+        throw new Error(
+          `The password should be a string, instead got a ${typeof password}`
+        );
+      }
       if (password.length < MIN_LENGTH) {
         throw new Error(
           `The password should be at least ${MIN_LENGTH} characters long.`
