@@ -1,0 +1,23 @@
+{
+  "author": "John Sciutto",
+  "license": "ISC",
+  "description": "Back-end for the budgeting app.",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "express": "^4.18.2",
+    "sequelize": "^6.28.0",
+    "sqlite3": "^5.1.4"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "eslint": "^8.31.0"
+  },
+  "name": "back_end",
+  "version": "1.0.0",
+  "main": ".eslintrc.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "seed": "node ./seeders/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
