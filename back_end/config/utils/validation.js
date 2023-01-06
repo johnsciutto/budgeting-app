@@ -63,7 +63,7 @@ class Validation {
    */
   static isEmailValid(email) {
     const { EMAIL_REGEX } = this.RULES.EMAIL;
-    const response = { ok: false };
+    const response = { ok: false, error: null };
     try {
       const result = EMAIL_REGEX.test(email);
       if (!result) {
