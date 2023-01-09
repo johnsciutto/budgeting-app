@@ -13,7 +13,7 @@ const addTransaction = async (req, res) => {
       throw new Error(isValid.error);
     }
 
-    const [{ id: categoryId }] = await Category.findOrCreate({
+    const dbCategory = await Category.findOne({
       where: { type, name: category },
     });
 
@@ -23,7 +23,7 @@ const addTransaction = async (req, res) => {
       amount,
       date,
       note,
-      categoryId,
+      categoryId: dbCategory.id,
     });
 
     response.ok = true;
