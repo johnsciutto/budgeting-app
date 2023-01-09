@@ -1,31 +1,31 @@
-const { describe, it, xit, expect } = require('@jest/globals');
+const { describe, test, expect } = require('@jest/globals');
 const { Validation } = require('./validation');
 
 describe('Validation', () => {
-  it('should exist', () => {
+  test('should exist', () => {
     expect(Validation).not.toBeUndefined();
   });
 
-  it('should have a RULES static property with a password and email properties', () => {
+  test('should have a RULES static property with a password and email properties', () => {
     expect(Validation.RULES).not.toBeUndefined();
     expect(Validation.RULES.PASSWORD).not.toBeUndefined();
     expect(Validation.RULES.EMAIL).not.toBeUndefined();
   });
 
   describe('isPasswordValid', () => {
-    it('should exist', () => {
+    test('should exist', () => {
       expect(Validation.isPasswordValid).not.toBeUndefined();
     });
 
-    it('should produce an object with an "ok" property', () => {
+    test('should produce an object with an "ok" property', () => {
       expect(Validation.isPasswordValid('testing1234')).toHaveProperty('ok');
     });
 
-    it('should produce an object with an "error" property', () => {
+    test('should produce an object with an "error" property', () => {
       expect(Validation.isPasswordValid('testing1234')).toHaveProperty('error');
     });
 
-    it('should take in a string as an argument', () => {
+    test('should take in a string as an argument', () => {
       expect(Validation.isPasswordValid(1234)).toMatchObject({
         ok: false,
         error: 'The password should be a string, instead got a number',
@@ -35,7 +35,7 @@ describe('Validation', () => {
       });
     });
 
-    it('should check that the password has a number of min characters', () => {
+    test('should check that the password has a number of min characters', () => {
       expect(Validation.isPasswordValid('')).toMatchObject({
         ok: false,
         error: `The password should be at least ${Validation.RULES.PASSWORD.MIN_LENGTH} characters long.`,
@@ -48,19 +48,19 @@ describe('Validation', () => {
   });
 
   describe('isEmailValid', () => {
-    it('should exist', () => {
+    test('should exist', () => {
       expect(Validation.isEmailValid).not.toBeUndefined();
     });
 
-    it('should return an object with an "ok" property', () => {
+    test('should return an object with an "ok" property', () => {
       expect(Validation.isEmailValid()).toHaveProperty('ok');
     });
 
-    it('should return an object with an "error" property', () => {
+    test('should return an object with an "error" property', () => {
       expect(Validation.isEmailValid()).toHaveProperty('error');
     });
 
-    it('should return an "ok" property with a value of false if the passed email is not valid', () => {
+    test('should return an "ok" property with a value of false if the passed email is not valid', () => {
       expect(Validation.isEmailValid()).toMatchObject({
         ok: false,
         error: `The given email is not valid: ${undefined}`,
@@ -83,7 +83,7 @@ describe('Validation', () => {
       });
     });
 
-    it('should return an "ok" property with a value of true if the passed email is valid', () => {
+    test('should return an "ok" property with a value of true if the passed email is valid', () => {
       expect(Validation.isEmailValid('john@test.com')).toMatchObject({
         ok: true,
         error: null,
@@ -100,27 +100,27 @@ describe('Validation', () => {
   });
 
   describe('_isValidAmount', () => {
-    it('returns true for a valid number', () => {
+    test('returns true for a valid number', () => {
       expect(Validation._isValidAmount(10)).toBe(true);
     });
 
-    it('returns false for a non-number', () => {
+    test('returns false for a non-number', () => {
       expect(Validation._isValidAmount('10')).toBe(false);
       expect(Validation._isValidAmount(true)).toBe(false);
       expect(Validation._isValidAmount(null)).toBe(false);
     });
 
-    it('returns false for NaN', () => {
+    test('returns false for NaN', () => {
       expect(Validation._isValidAmount(NaN)).toBe(false);
     });
   });
 
   describe('_isValidDate', () => {
-    it('returns true for a valid date', () => {
+    test('returns true for a valid date', () => {
       expect(Validation._isValidDate(new Date())).toBe(true);
     });
 
-    it('returns false for a non-date', () => {
+    test('returns false for a non-date', () => {
       expect(Validation._isValidDate('2022-01-01')).toBe(false);
       expect(Validation._isValidDate(100)).toBe(false);
       expect(Validation._isValidDate(null)).toBe(false);
@@ -128,7 +128,7 @@ describe('Validation', () => {
   });
 
   describe('isValidTransaction', () => {
-    it('returns ok: true for a valid transaction', () => {
+    test('returns ok: true for a valid transaction', () => {
       const transaction = {
         name: 'Test transaction',
         amount: 10,
@@ -140,7 +140,7 @@ describe('Validation', () => {
       });
     });
 
-    it('returns ok: false and an error message for an invalid transaction name', () => {
+    test('returns ok: false and an error message for an invalid transaction name', () => {
       const transaction = {
         name: '',
         amount: 10,
@@ -152,7 +152,7 @@ describe('Validation', () => {
       });
     });
 
-    it('returns ok: false and an error message for an invalid transaction amount', () => {
+    test('returns ok: false and an error message for an invalid transaction amount', () => {
       const transaction = {
         name: 'Test transaction',
         amount: '10',
@@ -164,7 +164,7 @@ describe('Validation', () => {
       });
     });
 
-    it('returns ok: false and an error message for an invalid transaction date', () => {
+    test('returns ok: false and an error message for an invalid transaction date', () => {
       const transaction = {
         name: 'Test transaction',
         amount: 10,

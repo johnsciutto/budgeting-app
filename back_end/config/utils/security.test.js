@@ -1,36 +1,38 @@
+const { describe, test, expect } = require('@jest/globals');
+const bcrypt = require('bcrypt');
 const { Security } = require('./security');
-const { describe, it, xit, expect } = require('@jest/globals');
 
 describe('Security', () => {
-  it('should exist', () => {
+  test('should exist', () => {
     expect(Security).not.toBeNull();
   });
 
-  it('should have a SALT_ROUNDS static property that is an interger greater or equal to 10', () => {
+  test('should have a SALT_ROUNDS static property that is an interger greater or equal to 10', () => {
     expect(Security.SALT_ROUNDS).not.toBeNull();
     expect(Security.SALT_ROUNDS).toBeGreaterThanOrEqual(10);
   });
 
   describe('hashPassword', () => {
-    it('should exist', () => {
+    test('should exist', () => {
       expect(Security.hashPassword).not.toBeUndefined();
     });
 
-    // NOTE: For some reason this is not working properly
-    xit('should take in a string as a parameter', () => {
-      expect(() => {
-        Security.hashPassword(1);
-      }).toThrow();
+    test('should fail if the parameter is not a string', async () => {
+      expect(await Security.hashPassword(123)).toMatchObject({ ok: false });
     });
 
-    it('should produce a hashed password', async () => {
-      const hashedPass = await Security.hashPassword('testing');
-      expect(hashedPass.length).toBeGreaterThan(10);
+    test('should produce a hashed password', async () => {
+      jest.spyOn(bcrypt, 'hash').mockResolvedValue('hashedpassword1234');
+      const result = await Security.hashPassword('testing');
+      expect(result).toMatchObject({
+        ok: true,
+        password: 'hashedpassword1234',
+      });
     });
   });
 
   describe('isUserPassword', () => {
-    it('should exist', () => {
+    test('should exist', () => {
       expect(Security.isUserPassword).not.toBeUndefined();
     });
   });
