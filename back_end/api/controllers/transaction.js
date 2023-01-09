@@ -1,7 +1,6 @@
 const { Transaction, User, Category } = require('../models/index');
 const { Validation } = require('../../config/utils/validation');
 
-// TODO: Test
 const addTransaction = async (req, res) => {
   const response = { ok: true, error: null, transactionId: null };
   try {
