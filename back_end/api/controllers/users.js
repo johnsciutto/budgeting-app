@@ -83,6 +83,10 @@ const editUser = async (req, res) => {
       changeObj.email = email;
     }
 
+    if ((oldPassword && !newPassword) || (!oldPassword && newPassword)) {
+      throw new Error('One of the passwords is missing.');
+    }
+
     if (oldPassword && newPassword) {
       const user = await User.findByPk(userId);
 
