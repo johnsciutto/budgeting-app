@@ -35,7 +35,6 @@ const addTransaction = async (req, res) => {
     response.ok = true;
     response.transactionId = id;
   } catch (err) {
-    console.error(err);
     response.ok = false;
     response.error = err.message;
   }
