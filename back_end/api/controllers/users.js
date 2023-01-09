@@ -34,10 +34,14 @@ const registerUser = async (req, res) => {
     // hash the password.
     const hashedPassword = await Security.hashPassword(password);
     // Store the user with the username, the email and the hashedPassword in the database.
+    if (!hashedPassword.ok) {
+      throw new Error(hashedPassword.error);
+    }
+
     const newUser = await User.create({
       username,
       email,
-      password: hashedPassword,
+      password: hashedPassword.password,
     });
 
     response.ok = true;
@@ -103,7 +107,11 @@ const editUser = async (req, res) => {
 
       const hashedPassword = await Security.hashPassword(newPassword);
 
-      changeObj.password = hashedPassword;
+      if (!hashedPassword.ok) {
+        throw new Error(hashedPassword.error);
+      }
+
+      changeObj.password = hashedPassword.password;
     }
 
     const [resultCount] = await User.update(changeObj, {

@@ -12,7 +12,7 @@ class Security {
         );
       }
 
-      result.hashedPass = await bcrypt.hash(pass, this.SALT_ROUNDS);
+      result.password = await bcrypt.hash(pass, this.SALT_ROUNDS);
     } catch (err) {
       result.ok = false;
       result.error = err.message;
