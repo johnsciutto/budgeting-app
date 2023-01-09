@@ -88,17 +88,17 @@ const editUser = async (req, res) => {
     }
 
     if (oldPassword && newPassword) {
+      const isValidPassword = Validation.isPasswordValid(newPassword);
+      if (!isValidPassword.ok) {
+        throw new Error(isValidPassword.error);
+      }
+
       const user = await User.findByPk(userId);
 
       const passwordMatches = await Security.isUserPassword(user, oldPassword);
 
       if (!passwordMatches) {
         throw new Error('The given (existing) password is not correct.');
-      }
-
-      const isValidPassword = Validation.isPasswordValid(newPassword);
-      if (!isValidPassword.ok) {
-        throw new Error(isValidPassword.error);
       }
 
       const hashedPassword = await Security.hashPassword(newPassword);
@@ -141,7 +141,7 @@ const loginUser = async (req, res) => {
       throw new Error('Invalid username or password');
     }
 
-    const isCorrectPassword = await Security.isUserPassword(user, password)
+    const isCorrectPassword = await Security.isUserPassword(user, password);
     if (!isCorrectPassword) {
       throw new Error(`Invalid username or password`);
     }
@@ -164,7 +164,7 @@ const loginUser = async (req, res) => {
  * @property {string | null} response.error
  */
 const deleteUser = async (req, res) => {
-  const response = { ok: false, error: null };
+  const response = { ok: true, error: null };
   const { userId } = req.params;
 
   try {
@@ -183,7 +183,9 @@ const deleteUser = async (req, res) => {
       },
     });
 
-    response.ok = result === 1;
+    if (result === 0) {
+      throw new Error('The operation to delete the user failed.');
+    }
   } catch (err) {
     response.ok = false;
     response.error = err.message;
