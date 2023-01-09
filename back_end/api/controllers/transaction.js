@@ -17,6 +17,12 @@ const addTransaction = async (req, res) => {
       where: { type, name: category },
     });
 
+    if (!dbCategory) {
+      throw new Error(
+        `The "${type}" category of "${category}" was not found in the database.`
+      );
+    }
+
     const { id } = await Transaction.create({
       userId,
       name,
