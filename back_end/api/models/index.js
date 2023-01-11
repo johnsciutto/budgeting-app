@@ -34,4 +34,9 @@ Category.hasMany(Transaction, {
   },
 });
 
+Transaction.findAllFiltered = async function (filter) {
+  const result = await Transaction.findAll({ where: filter });
+  return result;
+};
+
 module.exports = { User, Category, Transaction };
