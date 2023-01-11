@@ -38,7 +38,7 @@ Transaction.findAllFiltered = async function (filter) {
   const result = await Transaction.findAndCountAll({
     where: filter,
     attributes: {
-      exclude: ['createdAt', 'updatedAt', 'userId'],
+      exclude: ['createdAt', 'updatedAt', 'userId', 'categoryId'],
     },
     include: [
       {
