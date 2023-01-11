@@ -153,9 +153,9 @@ describe('transaction controller', () => {
             date: '2023-01-09T11:27:52.375Z',
             amount: 2000,
             note: null,
-            category: {
+            Category: {
               type: 'income',
-              category: 'paycheck',
+              name: 'paycheck',
             },
           },
           {
@@ -164,9 +164,9 @@ describe('transaction controller', () => {
             date: '2023-01-09T11:27:52.375Z',
             amount: 1000,
             note: null,
-            category: {
+            Category: {
               type: 'expense',
-              category: 'home',
+              name: 'home',
             },
           },
         ],
@@ -208,9 +208,9 @@ describe('transaction controller', () => {
         date: '2023-01-09T11:27:52.375Z',
         amount: 2000,
         note: null,
-        category: {
+        Category: {
           type: 'income',
-          category: 'paycheck',
+          name: 'paycheck',
         },
       });
       expect(result.transactions).toContainEqual({
@@ -219,9 +219,9 @@ describe('transaction controller', () => {
         date: '2023-01-09T11:27:52.375Z',
         amount: 1000,
         note: null,
-        category: {
+        Category: {
           type: 'expense',
-          category: 'home',
+          name: 'home',
         },
       });
       expect(result).toHaveProperty('resultCount');
