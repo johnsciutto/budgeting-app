@@ -1,5 +1,6 @@
 const { Transaction, User, Category } = require('../models/index');
 const { Validation } = require('../../config/utils/validation');
+const { DataPreparation } = require('../../config/utils/dataPreparation');
 
 const addTransaction = async (req, res) => {
   const response = { ok: true, error: null, transactionId: null };
@@ -82,11 +83,14 @@ const getTransaction = async (req, res) => {
 const getTransactions = async (req, res) => {
   const response = { ok: true, error: null, transactions: null };
   try {
-    // TODO: Write function...
-    const { userId } = req.params;
-    const filterObj = { userId };
-    const transactionArr = await Transaction.findAll({ where: filterObj });
-    response.transactions = transactionArr;
+    const rawData = req.params;
+    const filter = DataPreparation.createTransactionFilter(rawData);
+    if (!filter.ok) {
+      throw new Error(filter.error)
+    }
+    const { count, rows } = await Transaction.findAllFiltered(filter.data);
+    response.transactions = rows;
+    response.resultCount = count;
     response.ok = true;
   } catch (err) {
     response.ok = false;
