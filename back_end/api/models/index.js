@@ -35,7 +35,7 @@ Category.hasMany(Transaction, {
 });
 
 Transaction.findAllFiltered = async function (filter) {
-  const result = await Transaction.findAll({ where: filter });
+  const result = await Transaction.findAndCountAll({ where: filter });
   return result;
 };
 
