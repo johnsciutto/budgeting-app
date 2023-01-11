@@ -40,7 +40,17 @@ Transaction.findAllFiltered = async function (filter) {
     attributes: {
       exclude: ['createdAt', 'updatedAt', 'userId'],
     },
+    include: [
+      {
+        model: Category,
+        required: true,
+        attributes: {
+          exclude: ['id'],
+        },
+      },
+    ],
   });
+
   return result;
 };
 
