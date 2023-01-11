@@ -85,12 +85,15 @@ const getTransactions = async (req, res) => {
   try {
     const rawData = req.params;
     const filter = DataPreparation.createTransactionFilter(rawData);
+
     if (!filter.ok) {
-      throw new Error(filter.error)
+      throw new Error(filter.error);
     }
+
     const { count, rows } = await Transaction.findAllFiltered(filter.data);
     response.transactions = rows;
     response.resultCount = count;
+
     response.ok = true;
   } catch (err) {
     response.ok = false;
