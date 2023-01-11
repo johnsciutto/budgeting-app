@@ -140,7 +140,7 @@ describe('transaction controller', () => {
       const result = JSON.parse(await getTransactions(req, res));
       expect(result).toMatchObject({
         ok: false,
-        error: 'The userId is not valid.',
+        error: 'The filter object needs to have a userId property.',
       });
     });
 
