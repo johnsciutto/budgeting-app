@@ -146,17 +146,15 @@ describe('transaction controller', () => {
 
     test('should produce filtered results with the category included', async () => {
       const findAllFilteredMockResults = {
-        rows: [
+        transactions: [
           {
             id: 1,
             name: 'Salary',
             date: '2023-01-09T11:27:52.375Z',
             amount: 2000,
             note: null,
-            Category: {
-              type: 'income',
-              name: 'paycheck',
-            },
+            type: 'income',
+            category: 'paycheck',
           },
           {
             id: 2,
@@ -164,13 +162,11 @@ describe('transaction controller', () => {
             date: '2023-01-09T11:27:52.375Z',
             amount: 1000,
             note: null,
-            Category: {
-              type: 'expense',
-              name: 'home',
-            },
+            type: 'expense',
+            category: 'home',
           },
         ],
-        count: 2,
+        transactionCount: 2,
       };
 
       req.params = {
@@ -208,10 +204,8 @@ describe('transaction controller', () => {
         date: '2023-01-09T11:27:52.375Z',
         amount: 2000,
         note: null,
-        Category: {
-          type: 'income',
-          name: 'paycheck',
-        },
+        type: 'income',
+        category: 'paycheck',
       });
       expect(result.transactions).toContainEqual({
         id: 2,
@@ -219,13 +213,11 @@ describe('transaction controller', () => {
         date: '2023-01-09T11:27:52.375Z',
         amount: 1000,
         note: null,
-        Category: {
-          type: 'expense',
-          name: 'home',
-        },
+        type: 'expense',
+        category: 'home',
       });
-      expect(result).toHaveProperty('resultCount');
-      expect(result.resultCount).toBe(2);
+      expect(result).toHaveProperty('transactionCount');
+      expect(result.transactionCount).toBe(2);
     });
 
     afterEach(() => {

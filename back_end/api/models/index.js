@@ -59,7 +59,7 @@ Transaction.findAllFiltered = async function (filter) {
     transaction.category = category;
   });
 
-  return result;
+  return { transactions: result.rows, transactionCount: result.count };
 };
 
 module.exports = { User, Category, Transaction };

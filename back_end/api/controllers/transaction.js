@@ -90,9 +90,9 @@ const getTransactions = async (req, res) => {
       throw new Error(filter.error);
     }
 
-    const { count, rows } = await Transaction.findAllFiltered(filter.data);
-    response.transactions = rows;
-    response.resultCount = count;
+    const result = await Transaction.findAllFiltered(filter.data);
+    response.transactions = result.transactions;
+    response.transactionCount = result.transactionCount;
 
     response.ok = true;
   } catch (err) {
