@@ -4,8 +4,20 @@ class Security {
   static SALT_ROUNDS = 10;
 
   static async hashPassword(pass) {
-    const hashedPass = await bcrypt.hash(pass, this.SALT_ROUNDS);
-    return hashedPass;
+    const result = { ok: true };
+    try {
+      if (typeof pass !== 'string') {
+        throw new Error(
+          `The password needs to be a string, instead got a ${typeof pass}`
+        );
+      }
+
+      result.password = await bcrypt.hash(pass, this.SALT_ROUNDS);
+    } catch (err) {
+      result.ok = false;
+      result.error = err.message;
+    }
+    return result;
   }
 
   static async isUserPassword(user, pass) {

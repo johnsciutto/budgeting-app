@@ -34,10 +34,14 @@ const registerUser = async (req, res) => {
     // hash the password.
     const hashedPassword = await Security.hashPassword(password);
     // Store the user with the username, the email and the hashedPassword in the database.
+    if (!hashedPassword.ok) {
+      throw new Error(hashedPassword.error);
+    }
+
     const newUser = await User.create({
       username,
       email,
-      password: hashedPassword,
+      password: hashedPassword.password,
     });
 
     response.ok = true;
@@ -83,7 +87,16 @@ const editUser = async (req, res) => {
       changeObj.email = email;
     }
 
+    if ((oldPassword && !newPassword) || (!oldPassword && newPassword)) {
+      throw new Error('One of the passwords is missing.');
+    }
+
     if (oldPassword && newPassword) {
+      const isValidPassword = Validation.isPasswordValid(newPassword);
+      if (!isValidPassword.ok) {
+        throw new Error(isValidPassword.error);
+      }
+
       const user = await User.findByPk(userId);
 
       const passwordMatches = await Security.isUserPassword(user, oldPassword);
@@ -92,14 +105,13 @@ const editUser = async (req, res) => {
         throw new Error('The given (existing) password is not correct.');
       }
 
-      const isValidPassword = Validation.isPasswordValid(newPassword);
-      if (!isValidPassword.ok) {
-        throw new Error(isValidPassword.error);
-      }
-
       const hashedPassword = await Security.hashPassword(newPassword);
 
-      changeObj.password = hashedPassword;
+      if (!hashedPassword.ok) {
+        throw new Error(hashedPassword.error);
+      }
+
+      changeObj.password = hashedPassword.password;
     }
 
     const [resultCount] = await User.update(changeObj, {
@@ -137,7 +149,7 @@ const loginUser = async (req, res) => {
       throw new Error('Invalid username or password');
     }
 
-    const isCorrectPassword = await Security.isUserPassword(user, password)
+    const isCorrectPassword = await Security.isUserPassword(user, password);
     if (!isCorrectPassword) {
       throw new Error(`Invalid username or password`);
     }
@@ -160,7 +172,7 @@ const loginUser = async (req, res) => {
  * @property {string | null} response.error
  */
 const deleteUser = async (req, res) => {
-  const response = { ok: false, error: null };
+  const response = { ok: true, error: null };
   const { userId } = req.params;
 
   try {
@@ -179,7 +191,9 @@ const deleteUser = async (req, res) => {
       },
     });
 
-    response.ok = result === 1;
+    if (result === 0) {
+      throw new Error('The operation to delete the user failed.');
+    }
   } catch (err) {
     response.ok = false;
     response.error = err.message;

@@ -1,7 +1,6 @@
 const { Transaction, User, Category } = require('../models/index');
 const { Validation } = require('../../config/utils/validation');
 
-// TODO: Test
 const addTransaction = async (req, res) => {
   const response = { ok: true, error: null, transactionId: null };
   try {
@@ -13,9 +12,15 @@ const addTransaction = async (req, res) => {
       throw new Error(isValid.error);
     }
 
-    const [{ id: categoryId }] = await Category.findOrCreate({
+    const dbCategory = await Category.findOne({
       where: { type, name: category },
     });
+
+    if (!dbCategory) {
+      throw new Error(
+        `The "${type}" category of "${category}" was not found in the database.`
+      );
+    }
 
     const { id } = await Transaction.create({
       userId,
@@ -23,13 +28,12 @@ const addTransaction = async (req, res) => {
       amount,
       date,
       note,
-      categoryId,
+      categoryId: dbCategory.id,
     });
 
     response.ok = true;
     response.transactionId = id;
   } catch (err) {
-    console.error(err);
     response.ok = false;
     response.error = err.message;
   }
