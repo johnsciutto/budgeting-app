@@ -51,6 +51,14 @@ Transaction.findAllFiltered = async function (filter) {
     ],
   });
 
+  result.rows.forEach(({ dataValues: transaction }) => {
+    const type = transaction.Category.dataValues.type;
+    const category = transaction.Category.dataValues.name;
+    delete transaction.Category;
+    transaction.type = type;
+    transaction.category = category;
+  });
+
   return result;
 };
 
