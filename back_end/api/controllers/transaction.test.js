@@ -153,10 +153,20 @@ describe('transaction controller', () => {
       expect(result.transaction).toBe(null);
     });
 
-    // NEXT: Do this one
-    test.todo(
-      'should create an error object if the transaction with the given id is not found on the database'
-    );
+    test('should create an error object if the transaction with the given id is not found on the database', async () => {
+      req.params.transactionId = '111';
+
+      jest.spyOn(Transaction, 'findById').mockResolvedValue(null);
+
+      const result = JSON.parse(await getTransaction(req, res));
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result.error).toBe(
+        `The transaction with the given id (${req.params.transactionId}) was not found.`
+      );
+      expect(result).toHaveProperty('transaction');
+      expect(result.transaction).toBe(null);
+    });
 
     test('should create a success object if a valid transactionId is passed', async () => {
       req.params.transactionId = '10';
