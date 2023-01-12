@@ -62,4 +62,16 @@ Transaction.findAllFiltered = async function (filter) {
   return { transactions: result.rows, transactionCount: result.count };
 };
 
+Transaction.findById = async function (id) {
+  const { dataValues: transaction } = await Transaction.findByPk(id, {
+    include: Category,
+    attributes: { exclude: ['categoryId', 'createdAt', 'updatedAt', 'id'] },
+  });
+
+  transaction.type = transaction.Category.dataValues.type;
+  transaction.category = transaction.Category.dataValues.name;
+  delete transaction.Category;
+  return transaction;
+};
+
 module.exports = { User, Category, Transaction };
