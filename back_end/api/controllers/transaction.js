@@ -68,11 +68,23 @@ const deleteTransaction = async (req, res) => {
 };
 
 const getTransaction = async (req, res) => {
-  const response = { ok: true, error: null, transactionId: null };
+  const response = { ok: true, error: null, transaction: null };
   try {
-    // TODO: Write function...
-    const transactionId = 0;
-    Transaction.findByPk(transactionId);
+    const transactionId = parseInt(req.params.transactionId);
+
+    if (isNaN(transactionId)) {
+      throw new Error(
+        `The given transaction id is invalid: ${req.params.transactionId}`
+      );
+    }
+
+    if (!transactionId) {
+      throw new Error(`The given transaction id is invalid: ${transactionId}`);
+    }
+
+    const transaction = await Transaction.findById(transactionId);
+
+    response.transaction = transaction;
   } catch (err) {
     response.ok = false;
     response.error = err.message;
