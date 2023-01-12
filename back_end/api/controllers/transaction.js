@@ -83,6 +83,10 @@ const getTransaction = async (req, res) => {
     }
 
     const transaction = await Transaction.findById(transactionId);
+    
+    if (!transaction) {
+      throw new Error(`The transaction with the given id (${transactionId}) was not found.`)
+    }
 
     response.transaction = transaction;
   } catch (err) {
