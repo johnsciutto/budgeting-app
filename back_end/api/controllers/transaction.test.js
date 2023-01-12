@@ -120,7 +120,76 @@ describe('transaction controller', () => {
   });
 
   describe('getTransaction', () => {
-    test.todo('...');
+    let req = null;
+    const res = { json: (str) => JSON.stringify(str) };
+
+    beforeEach(() => {
+      req = {
+        params: {
+          transactionId: 1,
+        },
+      };
+    });
+
+    test('should create an error object if there is no transactionId passed', async () => {
+      req.params.transactionId = undefined;
+      const result = JSON.parse(await getTransaction(req, res));
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result.error).toBe(
+        'The given transaction id is invalid: undefined'
+      );
+      expect(result).toHaveProperty('transaction');
+      expect(result.transaction).toBe(null);
+    });
+
+    test('should create an error object if the transactionId is not an interger', async () => {
+      req.params.transactionId = 'testing';
+      const result = JSON.parse(await getTransaction(req, res));
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result.error).toBe('The given transaction id is invalid: testing');
+      expect(result).toHaveProperty('transaction');
+      expect(result.transaction).toBe(null);
+    });
+
+    // NEXT: Do this one
+    test.todo(
+      'should create an error object if the transaction with the given id is not found on the database'
+    );
+
+    test('should create a success object if a valid transactionId is passed', async () => {
+      req.params.transactionId = '10';
+
+      jest.spyOn(Transaction, 'findById').mockResolvedValue({
+        name: 'Supermarket',
+        date: 'jan-01-2022',
+        amount: 100,
+        note: 'this iis a note',
+        userId: 1,
+        type: 'expense',
+        category: 'Groceries',
+      });
+
+      const result = JSON.parse(await getTransaction(req, res));
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(true);
+      expect(result.error).toBe(null);
+      expect(result).toHaveProperty('transaction');
+      expect(result.transaction).toStrictEqual({
+        name: 'Supermarket',
+        date: 'jan-01-2022',
+        amount: 100,
+        note: 'this iis a note',
+        userId: 1,
+        type: 'expense',
+        category: 'Groceries',
+      });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
   });
 
   describe('getTransactions', () => {
