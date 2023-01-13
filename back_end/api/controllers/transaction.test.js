@@ -380,7 +380,58 @@ describe('transaction controller', () => {
       };
     });
 
-    test.todo('...')
+    test('should return an error object if there is no transactionId passed', async () => {
+      req.params.transactionId = undefined;
+
+      const result = JSON.parse(await editTransaction(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe('No transactionId was passed');
+    });
+
+    test('should return an error object if the transactionId is invalid', async () => {
+      req.params.transactionId = 'testing';
+
+      const result = JSON.parse(await editTransaction(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        'Expected transactionId to be a number, received: string'
+      );
+    });
+
+    test('shoud return an error object if the validation of the properties fails', async () => {
+      req.body.amount = 'testing';
+
+      jest.spyOn(Validation, 'isValidPartialTransaction').mockReturnValue({
+        ok: false,
+        error: 'The amount is not a valid number',
+      });
+
+      const result = JSON.parse(await editTransaction(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe('The amount is not a valid number');
+    });
+
+    test('should update the properties of an object in the database successfully', async () => {
+      req.body.amount = 120.5;
+
+      jest.spyOn(Transaction, 'update').mockResolvedValue(1);
+
+      const result = JSON.parse(await editTransaction(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(true);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(null);
+    });
 
     afterEach(() => {
       jest.restoreAllMocks();

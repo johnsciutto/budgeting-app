@@ -42,11 +42,46 @@ const addTransaction = async (req, res) => {
 };
 
 const editTransaction = async (req, res) => {
-  const response = { ok: true, error: null, transactionId: null };
+  const response = { ok: true, error: null };
   try {
-    const transactionId = 0;
-    // TODO: Write function...
-    Transaction.update({}, { where: { id: transactionId } });
+    const { transactionId } = req.params;
+    const { date, name, amount, type, category, note } = req.body;
+
+    if (transactionId === undefined) {
+      throw new Error(`No transactionId was passed`);
+    }
+
+    if (typeof transactionId !== 'number') {
+      throw new Error(
+        `Expected transactionId to be a number, received: ${typeof transactionId}`
+      );
+    }
+
+    const updatedProperties = {};
+    if (date) {
+      const newDate = new Date(date);
+      updatedProperties.date = newDate;
+    }
+    if (name) updatedProperties.name = name;
+    if (amount) updatedProperties.amount = amount;
+    if (type) updatedProperties.type = type;
+    if (category) updatedProperties.date = category;
+    if (note) updatedProperties.date = note;
+
+    const validationResult =
+      Validation.isValidPartialTransaction(updatedProperties);
+
+    if (!validationResult.ok) {
+      throw new Error(validationResult.error);
+    }
+
+    const result = await Transaction.update(updatedProperties, {
+      where: { id: transactionId },
+    });
+
+    if (result === 0) {
+      throw new Error('The transaction was not modified.');
+    }
   } catch (err) {
     response.ok = false;
     response.error = err.message;
@@ -65,7 +100,10 @@ const deleteTransaction = async (req, res) => {
       );
     }
 
-    const result = await Transaction.destroy({ where: { id: transactionId }, logging: true });
+    const result = await Transaction.destroy({
+      where: { id: transactionId },
+      logging: true,
+    });
     if (result === 0) {
       throw new Error(
         `The transaction with the id: ${transactionId} was not deleted from the database`
