@@ -1,4 +1,4 @@
-const { Transaction, User, Category } = require('../models/index');
+const { Transaction, Category } = require('../models/index');
 const { Validation } = require('../../config/utils/validation');
 const { DataPreparation } = require('../../config/utils/dataPreparation');
 
