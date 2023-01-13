@@ -96,4 +96,8 @@ User.getAllCategories = async function (user) {
   return organizedCategories;
 };
 
+User.addCategory = async (user, category) => {
+
+}
+
 module.exports = { User, Category, Transaction };
