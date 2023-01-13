@@ -374,9 +374,7 @@ describe('transaction controller', () => {
     beforeEach(() => {
       req = {
         params: { transactionId: 1 },
-        body: {
-          name: 'new Name',
-        },
+        body: {},
       };
     });
 
@@ -419,6 +417,35 @@ describe('transaction controller', () => {
       expect(result).toHaveProperty('error');
       expect(result.error).toBe('The amount is not a valid number');
     });
+
+    test("should return an error object if the user doesn't have the provided category", async () => {
+      req.body.type = 'income';
+      req.body.category = 'Business';
+
+      jest.spyOn(Category, 'findOne').mockResolvedValue(null);
+
+      const result = JSON.parse(await editTransaction(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(`The given ${req.body.type} category was not found: ${req.body.category}`);
+    });
+
+    test('should update the transaction with the new type and category', async () => {
+      req.body.type = 'expense';
+      req.body.category = 'Takeout';
+
+      jest.spyOn(Category, 'findOne').mockResolvedValue({ id: 5, type: 'expense', name: 'Takeout'});
+      jest.spyOn(Transaction, 'update').mockResolvedValue(1);
+
+      const result = JSON.parse(await editTransaction(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(true);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(null);
+    })
 
     test('should update the properties of an object in the database successfully', async () => {
       req.body.amount = 120.5;

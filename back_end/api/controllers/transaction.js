@@ -75,6 +75,26 @@ const editTransaction = async (req, res) => {
       throw new Error(validationResult.error);
     }
 
+    if (updatedProperties.type && updatedProperties.category) {
+      const updateCategory = await Category.findOne({
+        where: {
+          type: updatedProperties.type,
+          name: updatedProperties.category,
+        },
+      });
+
+      if (!updateCategory) {
+        throw new Error(
+          `The given ${updatedProperties.type} category was not found: ${updatedProperties.category}`
+        );
+      }
+
+      delete updatedProperties.type;
+      delete updatedProperties.category;
+
+      updatedProperties.categoryId = updateCategory.id;
+    }
+
     const result = await Transaction.update(updatedProperties, {
       where: { id: transactionId },
     });
