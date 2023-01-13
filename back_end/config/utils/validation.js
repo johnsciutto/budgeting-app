@@ -153,9 +153,8 @@ class Validation {
         );
       }
 
-      const parsedDate = date ? new Date(date) : undefined;
-      if (parsedDate) {
-        if (!this._isValidDate(parsedDate)) {
+      if (date) {
+        if (!this._isValidDate(date)) {
           throw new Error(`The given date is invalid: ${date}`);
         }
       }
@@ -196,15 +195,6 @@ class Validation {
         );
       }
 
-      if (!this._isValidAmount(transaction.amount)) {
-        throw new Error(`The transaction's amount should be a valid number.`);
-      }
-
-      if (!transaction.date || !this._isValidDate(transaction.date)) {
-        throw new Error(
-          `The transaction's date should be a valid JavaScript date.`
-        );
-      }
     } catch (err) {
       response.ok = false;
       response.error = err.message;
