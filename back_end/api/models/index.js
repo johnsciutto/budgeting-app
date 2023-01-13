@@ -79,4 +79,23 @@ Transaction.findById = async function (id) {
   return transaction;
 };
 
+User.getAllCategories = async function (userId) {
+  const user = await User.findByPk(userId);
+
+  const categories = await user.getCategories({
+    attributes: ['type', 'name'],
+  });
+
+  const organizedCategories = categories.reduce((obj, cat) => {
+    const { type, name } = cat.dataValues;
+    if (!obj[type]) {
+      obj[type] = [];
+    }
+    obj[type].push(name);
+    return obj;
+  }, {});
+
+  return organizedCategories;
+};
+
 module.exports = { User, Category, Transaction };
