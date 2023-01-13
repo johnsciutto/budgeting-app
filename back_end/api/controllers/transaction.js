@@ -65,7 +65,7 @@ const deleteTransaction = async (req, res) => {
       );
     }
 
-    const result = await Transaction.destroy({ where: { id: transactionId } });
+    const result = await Transaction.destroy({ where: { id: transactionId }, logging: true });
     if (result === 0) {
       throw new Error(
         `The transaction with the id: ${transactionId} was not deleted from the database`
