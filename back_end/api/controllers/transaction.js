@@ -55,11 +55,22 @@ const editTransaction = async (req, res) => {
 };
 
 const deleteTransaction = async (req, res) => {
-  const response = { ok: true, error: null, transactionId: null };
+  const response = { ok: true, error: null };
   try {
-    // TODO: Write function...
-    const transactionId = 0;
-    Transaction.destroy({ where: { id: transactionId } });
+    const transactionId = req.params.transactionId;
+
+    if (typeof transactionId !== 'number') {
+      throw new Error(
+        `The transactionId should be a number, instead got: ${typeof transactionId}`
+      );
+    }
+
+    const result = await Transaction.destroy({ where: { id: transactionId } });
+    if (result === 0) {
+      throw new Error(
+        `The transaction with the id: ${transactionId} was not deleted from the database`
+      );
+    }
   } catch (err) {
     response.ok = false;
     response.error = err.message;
@@ -83,9 +94,11 @@ const getTransaction = async (req, res) => {
     }
 
     const transaction = await Transaction.findById(transactionId);
-    
+
     if (!transaction) {
-      throw new Error(`The transaction with the given id (${transactionId}) was not found.`)
+      throw new Error(
+        `The transaction with the given id (${transactionId}) was not found.`
+      );
     }
 
     response.transaction = transaction;

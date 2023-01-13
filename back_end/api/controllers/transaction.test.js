@@ -303,4 +303,65 @@ describe('transaction controller', () => {
       jest.restoreAllMocks();
     });
   });
+
+  describe('deleteTransaction', () => {
+    let req = null;
+    const res = {
+      json: (str) => JSON.stringify(str),
+    };
+
+    beforeEach(() => {
+      req = { params: { transactionId: 1 } };
+    });
+
+    test("should delete the transaction if it's found in the database.", async () => {
+      jest.spyOn(Transaction, 'destroy').mockResolvedValue(1);
+
+      const result = JSON.parse(await deleteTransaction(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(true);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(null);
+    });
+
+    test('should throw an error if the transactionId is not a number.', async () => {
+      req.params.transactionId = 'testing'
+      const result1 = JSON.parse(await deleteTransaction(req, res));
+
+      expect(result1).toHaveProperty('ok');
+      expect(result1.ok).toBe(false);
+      expect(result1).toHaveProperty('error');
+      expect(result1.error).toBe(
+        'The transactionId should be a number, instead got: string'
+      );
+
+      req.params.transactionId = true
+      const result2 = JSON.parse(await deleteTransaction(req, res));
+
+      expect(result2).toHaveProperty('ok');
+      expect(result2.ok).toBe(false);
+      expect(result2).toHaveProperty('error');
+      expect(result2.error).toBe(
+        'The transactionId should be a number, instead got: boolean'
+      );
+    });
+
+    test('should throw an error if the delete operation failed.', async () => {
+      jest.spyOn(Transaction, 'destroy').mockResolvedValue(0);
+
+      const result = JSON.parse(await deleteTransaction(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        'The transaction with the id: 1 was not deleted from the database'
+      );
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+  });
 });
