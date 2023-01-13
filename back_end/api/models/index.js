@@ -79,13 +79,7 @@ Transaction.findById = async function (id) {
   return transaction;
 };
 
-User.getAllCategories = async function (userId) {
-  const user = await User.findByPk(userId);
-
-  if (!user) {
-    return null;
-  }
-
+User.getAllCategories = async function (user) {
   const categories = await user.getCategories({
     attributes: ['type', 'name'],
   });

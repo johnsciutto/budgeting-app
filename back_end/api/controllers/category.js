@@ -11,11 +11,13 @@ const getCategories = async (req, res) => {
       throw new Error(`The given user id was not found: ${userId}`);
     }
 
-    const categories = await User.getAllCategories(userId);
+    const user = await User.findByPk(userId)
 
-    if (!categories) {
-      throw new Error(`The given user was not found in the database.`);
+    if (!user) {
+      throw new Error('The given user was not found in the database.')
     }
+
+    const categories = await User.getAllCategories(user);
 
     response.categories = categories;
   } catch (err) {
