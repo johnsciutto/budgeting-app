@@ -136,6 +136,70 @@ class Validation {
 
     return response;
   }
+
+  static isValidPartialTransaction(transaction) {
+    const response = { ok: true, error: null };
+    try {
+      const { name, date, note, type, category, amount} = transaction;
+
+      if (!name && !note && !type && !category && !amount) {
+        throw new Error(
+          'The transaction was not modified. No new properties were given'
+        );
+      }
+
+      if (!type && category) {
+        throw new Error(
+          'In order to modify the category, both the category and type need to be provided'
+        );
+      }
+
+      if (name && typeof name !== 'string') {
+        throw new Error(
+          `Expected the name to be a string. Received: ${typeof name}`
+        );
+      }
+
+      if (note && typeof note !== 'string') {
+        throw new Error(
+          `Expected the note to be a string. Received: ${typeof note}`
+        );
+      }
+
+      if (amount && typeof amount !== 'number') {
+        throw new Error(
+          `Expected the amount to be a number. Received: ${typeof amount}`
+        );
+      }
+
+      if (category && typeof category !== 'string') {
+        throw new Error(
+          `Expected the category to be a string. Received: ${typeof category}`
+        );
+      }
+
+      if (type && !['expense', 'income'].includes(type)) {
+        throw new Error(
+          `Expected the type to be either "income" or "expense". Received: ${type}`
+        );
+      }
+
+      if (!this._isValidAmount(transaction.amount)) {
+        throw new Error(`The transaction's amount should be a valid number.`);
+      }
+
+      if (!transaction.date || !this._isValidDate(transaction.date)) {
+        throw new Error(
+          `The transaction's date should be a valid JavaScript date.`
+        );
+      }
+    } catch (err) {
+      response.ok = false;
+      response.error = err.message;
+    }
+
+    return response;
+  }
 }
 
 module.exports = { Validation };

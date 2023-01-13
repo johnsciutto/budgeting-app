@@ -1,4 +1,6 @@
 const { describe, test, expect } = require('@jest/globals');
+const { type } = require('express/lib/response');
+const { Transaction } = require('sequelize');
 const { Validation } = require('./validation');
 
 describe('Validation', () => {
@@ -174,6 +176,105 @@ describe('Validation', () => {
         ok: false,
         error: "The transaction's date should be a valid JavaScript date.",
       });
+    });
+  });
+
+  describe('isValidPartialTransaction', () => {
+    test('should return an error if no body properties were passed to make an edit', () => {
+      const partialTransaction = {};
+      const result = Validation.isValidPartialTransaction(partialTransaction);
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        'The transaction was not modified. No new properties were given'
+      );
+    });
+
+    test('should return an error object if a category is passed but no type is passed', () => {
+      const partialTransaction = {
+        category: 'Groceries',
+        type: undefined,
+      };
+
+      const result = Validation.isValidPartialTransaction(partialTransaction);
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        'In order to modify the category, both the category and type need to be provided'
+      );
+    });
+
+    test('should return an error object if the name is not a string', () => {
+      const partialTransaction = {
+        name: 234,
+      };
+
+      const result = Validation.isValidPartialTransaction(partialTransaction);
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `Expected the name to be a string. Received: ${typeof partialTransaction.name}`
+      );
+    });
+
+    test('should return an error object if the note is not a string', () => {
+      const partialTransaction = {
+        note: true,
+      };
+
+      const result = Validation.isValidPartialTransaction(partialTransaction);
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `Expected the note to be a string. Received: ${typeof partialTransaction.note}`
+      );
+    });
+
+    test('should return an error object if the type is not either "income" or "expense"', () => {
+      const partialTransaction = {
+        type: 'inco',
+      };
+
+      const result = Validation.isValidPartialTransaction(partialTransaction);
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `Expected the type to be either "income" or "expense". Received: ${partialTransaction.type}`
+      );
+    });
+
+    test('should return an error object if the category is not a string', () => {
+      const partialTransaction = {
+        type: 'income',
+        category: 123,
+      };
+
+      const result = Validation.isValidPartialTransaction(partialTransaction);
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `Expected the category to be a string. Received: ${typeof partialTransaction.category}`
+      );
+    });
+
+    test('should return an error object if the amount is not a number', () => {
+      const partialTransaction = {
+        amount: '1234.4',
+      };
+      const result = Validation.isValidPartialTransaction(partialTransaction);
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `Expected the amount to be a number. Received: ${typeof partialTransaction.amount}`
+      );
     });
   });
 });
