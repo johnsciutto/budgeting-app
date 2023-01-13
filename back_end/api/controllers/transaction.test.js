@@ -326,7 +326,7 @@ describe('transaction controller', () => {
     });
 
     test('should throw an error if the transactionId is not a number.', async () => {
-      req.params.transactionId = 'testing'
+      req.params.transactionId = 'testing';
       const result1 = JSON.parse(await deleteTransaction(req, res));
 
       expect(result1).toHaveProperty('ok');
@@ -336,7 +336,7 @@ describe('transaction controller', () => {
         'The transactionId should be a number, instead got: string'
       );
 
-      req.params.transactionId = true
+      req.params.transactionId = true;
       const result2 = JSON.parse(await deleteTransaction(req, res));
 
       expect(result2).toHaveProperty('ok');
@@ -359,6 +359,28 @@ describe('transaction controller', () => {
         'The transaction with the id: 1 was not deleted from the database'
       );
     });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+  });
+
+  describe('editTransaction', () => {
+    let req = null;
+    const res = {
+      json: (str) => JSON.stringify(str),
+    };
+
+    beforeEach(() => {
+      req = {
+        params: { transactionId: 1 },
+        body: {
+          name: 'new Name',
+        },
+      };
+    });
+
+    test.todo('...')
 
     afterEach(() => {
       jest.restoreAllMocks();
