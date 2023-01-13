@@ -14,6 +14,7 @@ describe('category controller', () => {
         params: {
           userId: 1,
         },
+        body: {},
       };
     });
 
@@ -46,7 +47,7 @@ describe('category controller', () => {
     test('should create an error object if the user is not found in the database.', async () => {
       req.params.userId = 1234321;
 
-      jest.spyOn(User, 'getAllCategories').mockResolvedValue(null);
+      jest.spyOn(User, 'findByPk').mockResolvedValue(null);
 
       const result = JSON.parse(await getCategories(req, res));
 
@@ -79,8 +80,55 @@ describe('category controller', () => {
     expect(result.error).toBe(null);
     expect(result).toHaveProperty('categories');
     expect(result.categories).toMatchObject(mockedGetAllCategoriesResult);
-    expect(result.categories.income).toEqual(mockedGetAllCategoriesResult.income)
-    expect(result.categories.expense).toEqual(mockedGetAllCategoriesResult.expense)
+    expect(result.categories.income).toEqual(
+      mockedGetAllCategoriesResult.income
+    );
+    expect(result.categories.expense).toEqual(
+      mockedGetAllCategoriesResult.expense
+    );
+  });
+
+  describe('addCategory', () => {
+    test('should create an error object if there is no user id passed.', async () => {
+      req.params.userId = undefined;
+
+      const result = JSON.parse(await addCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `The given user id was not found: ${req.params.userId}`
+      );
+    });
+
+    test('should create an error object if the user id is not valid.', async () => {
+      req.params.userId = 'testing';
+
+      const result = JSON.parse(await addCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `The given user id was not found: ${req.params.userId}`
+      );
+    });
+
+    test('should create an error object if the user was not found in the database', async () => {
+      req.params.userId = 1234321;
+
+      jest.spyOn(User, 'findByPk').mockResolvedValue(null);
+
+      const result = JSON.parse(await addCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `The given user was not found in the database.`
+      );
+    });
   });
 
   afterEach(() => {
