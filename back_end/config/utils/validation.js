@@ -93,7 +93,12 @@ class Validation {
    * @returns {boolean} - True if the value is a valid date, false otherwise.
    */
   static _isValidDate(date) {
-    return date instanceof Date;
+    if (!date) return false;
+
+    const isInstance = date instanceof Date;
+    const isValid = date.toString() !== 'Invalid Date';
+
+    return isInstance && isValid;
   }
 
   /**
@@ -140,12 +145,19 @@ class Validation {
   static isValidPartialTransaction(transaction) {
     const response = { ok: true, error: null };
     try {
-      const { name, date, note, type, category, amount} = transaction;
+      const { name, date, note, type, category, amount } = transaction;
 
-      if (!name && !note && !type && !category && !amount) {
+      if (!name && !note && !type && !category && !amount && !date) {
         throw new Error(
           'The transaction was not modified. No new properties were given'
         );
+      }
+
+      const parsedDate = date ? new Date(date) : undefined;
+      if (parsedDate) {
+        if (!this._isValidDate(parsedDate)) {
+          throw new Error(`The given date is invalid: ${date}`);
+        }
       }
 
       if (!type && category) {

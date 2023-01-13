@@ -192,6 +192,20 @@ describe('Validation', () => {
       );
     });
 
+    test('should return an error object if the date is not valid', () => {
+      const partialTransaction = {
+        date: 'testing',
+      };
+
+      const result = Validation.isValidPartialTransaction(partialTransaction);
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `The given date is invalid: ${partialTransaction.date}`
+      );
+    });
+
     test('should return an error object if a category is passed but no type is passed', () => {
       const partialTransaction = {
         category: 'Groceries',
