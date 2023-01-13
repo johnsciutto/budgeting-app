@@ -65,7 +65,7 @@ const editTransaction = async (req, res) => {
     if (name) updatedProperties.name = name;
     if (amount) updatedProperties.amount = amount;
     if (type) updatedProperties.type = type;
-    if (category) updatedProperties.date = category;
+    if (category) updatedProperties.category = category;
     if (note) updatedProperties.date = note;
 
     const validationResult =
