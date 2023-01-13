@@ -99,9 +99,16 @@ const seedDatabase = async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync({ force: true });
-    await User.bulkCreate(users);
-    await Category.bulkCreate(categories);
+    const storedUsers = await User.bulkCreate(users);
+    const storedCategories = await Category.bulkCreate(categories);
     await Transaction.bulkCreate(transactions);
+
+    for (const user of storedUsers) {
+      for (const cat of storedCategories) {
+        await user.addCategory(cat);
+      }
+    }
+
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
