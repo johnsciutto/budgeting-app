@@ -1,6 +1,4 @@
 const { Category, User } = require('../models/index');
-const { Validation } = require('../../config/utils/validation');
-const { DataPreparation } = require('../../config/utils/dataPreparation');
 
 const getCategories = async (req, res) => {
   const response = { ok: true, error: null, categories: null };
