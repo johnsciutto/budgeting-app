@@ -79,6 +79,22 @@ Transaction.findById = async function (id) {
   return transaction;
 };
 
+User.findById = async function (id) {
+  try {
+    const result = await User.findByPk(id, {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'deletedAt', 'password'],
+      },
+    });
+
+    if (!result) return null;
+
+    return result;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
 User.getAllCategories = async function (user) {
   const categories = await user.getCategories({
     attributes: ['type', 'name'],
