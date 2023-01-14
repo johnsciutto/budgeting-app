@@ -113,7 +113,18 @@ User.getAllCategories = async function (user) {
 };
 
 User.addCategory = async (user, category) => {
+  const [storedCategory] = await Category.findOrCreate({
+    where: {
+      type: category.type,
+      name: category.name,
+    },
+  });
 
-}
+  await user.addCategory(storedCategory);
+
+  const categories = await User.getAllCategories(user);
+
+  return { ok: true, categories: categories };
+};
 
 module.exports = { User, Category, Transaction };
