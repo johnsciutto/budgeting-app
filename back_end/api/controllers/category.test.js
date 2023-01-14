@@ -129,6 +129,37 @@ describe('category controller', () => {
         `The given user was not found in the database.`
       );
     });
+
+    test('should return a success object if the category was added to the user', async () => {
+      req.params.userId = 1;
+      req.body.type = 'expense';
+      req.body.category = 'New Category';
+
+      jest.spyOn(User, 'findByPk').mockResolvedValue({
+        userId: 1,
+        username: 'john',
+        email: 'john@test.com',
+      });
+      jest.spyOn(User, 'addCategory').mockResolvedValue({
+        ok: true,
+        categories: {
+          income: ['Paycheque', 'Business'],
+          expense: ['Takeout', 'Groceries', 'New Category'],
+        },
+      });
+
+      const result = JSON.parse(await addCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(true);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(null);
+      expect(result).toHaveProperty('categories');
+      expect(result.categories).toMatchObject({
+        income: ['Paycheque', 'Business'],
+        expense: ['Takeout', 'Groceries', 'New Category'],
+      });
+    });
   });
 
   afterEach(() => {
