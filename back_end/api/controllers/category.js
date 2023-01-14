@@ -11,7 +11,7 @@ const getCategories = async (req, res) => {
       throw new Error(`The given user id was not found: ${userId}`);
     }
 
-    const user = await User.findByPk(userId);
+    const user = await User.findById(userId);
 
     if (!user) {
       throw new Error('The given user was not found in the database.');
@@ -30,7 +30,6 @@ const getCategories = async (req, res) => {
 const addCategory = async (req, res) => {
   const response = { ok: true, error: null, categories: null };
   try {
-    // TODO: Write function
     const { userId } = req.params;
     const { type, category } = req.body;
 
@@ -38,17 +37,23 @@ const addCategory = async (req, res) => {
       throw new Error(`The given user id was not found: ${userId}`);
     }
 
-    const user = await User.findByPk(userId)
+    const user = await User.findById(userId);
 
     if (!user) {
-      throw new Error('The given user was not found in the database.')
+      throw new Error('The given user was not found in the database.');
     }
 
-    const result = await User.addCategory(user, { type, category });
+    const result = await User.addCategory(user, { type, name: category });
 
+    if (!result.ok) {
+      throw new Error(`The category was not added successfully.`);
+    }
+
+    response.categories = result.categories;
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    response.categories = null;
   }
   return res.json(response);
 };
