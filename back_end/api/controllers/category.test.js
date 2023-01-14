@@ -47,7 +47,7 @@ describe('category controller', () => {
     test('should create an error object if the user is not found in the database.', async () => {
       req.params.userId = 1234321;
 
-      jest.spyOn(User, 'findByPk').mockResolvedValue(null);
+      jest.spyOn(User, 'findById').mockResolvedValue(null);
 
       const result = JSON.parse(await getCategories(req, res));
 
@@ -118,7 +118,7 @@ describe('category controller', () => {
     test('should create an error object if the user was not found in the database', async () => {
       req.params.userId = 1234321;
 
-      jest.spyOn(User, 'findByPk').mockResolvedValue(null);
+      jest.spyOn(User, 'findById').mockResolvedValue(null);
 
       const result = JSON.parse(await addCategory(req, res));
 
@@ -159,6 +159,114 @@ describe('category controller', () => {
         income: ['Paycheque', 'Business'],
         expense: ['Takeout', 'Groceries', 'New Category'],
       });
+    });
+  });
+
+  describe('deleteCategory', () => {
+    beforeEach(() => {
+      req = {
+        params: {
+          userId: 1,
+        },
+        body: {},
+      };
+    });
+
+    test('should exist', () => {
+      expect(deleteCategory).not.toBeUndefined();
+    });
+
+    test('should create an error object if there is no user id passed.', async () => {
+      req.params.userId = undefined;
+
+      const result = JSON.parse(await deleteCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `The given user id was not found: ${req.params.userId}`
+      );
+    });
+
+    test('should create an error object if the user id is not valid.', async () => {
+      req.params.userId = 'testing';
+
+      const result = JSON.parse(await deleteCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `The given user id was not found: ${req.params.userId}`
+      );
+    });
+
+    test('should create an error object if the user was not found in the database', async () => {
+      req.params.userId = 1234321;
+
+      jest.spyOn(User, 'findById').mockResolvedValue(null);
+
+      const result = JSON.parse(await deleteCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `The given user was not found in the database.`
+      );
+    });
+
+    test('should create an error object if the category was not found for that user', async () => {
+      req.params.userId = 1;
+      req.body = {
+        type: 'expense',
+        category: 'Groceries',
+      };
+
+      jest.spyOn(User, 'findById').mockResolvedValue({
+        userId: 1,
+        username: 'john',
+        email: 'john@testing.com',
+        removeCategory: async () => 0,
+      });
+      jest
+        .spyOn(Category, 'findOne')
+        .mockResolvedValue({ id: 12, type: 'expense', name: 'Groceries' });
+
+      const result = JSON.parse(await deleteCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(
+        `The ${req.body.type} with a name of ${req.body.category} was not deleted for the user with the id of ${req.params.userId}.`
+      );
+    });
+
+    test('should create a success object if the category was deleted for that user', async () => {
+      req.params.userId = 1;
+      req.body = {
+        type: 'expense',
+        category: 'Groceries',
+      };
+
+      jest.spyOn(User, 'findById').mockResolvedValue({
+        userId: 1,
+        username: 'john',
+        email: 'john@testing.com',
+        removeCategory: async () => 1,
+      });
+      jest
+        .spyOn(Category, 'findOne')
+        .mockResolvedValue({ id: 12, type: 'expense', name: 'Groceries' });
+
+      const result = JSON.parse(await deleteCategory(req, res));
+
+      expect(result).toHaveProperty('ok');
+      expect(result.ok).toBe(true);
+      expect(result).toHaveProperty('error');
+      expect(result.error).toBe(null);
     });
   });
 
