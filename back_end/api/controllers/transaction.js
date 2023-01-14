@@ -44,6 +44,7 @@ const addTransaction = async (req, res) => {
 const editTransaction = async (req, res) => {
   const response = { ok: true, error: null };
   try {
+    // NOTE: Add security to these routes (make sure that only the owner of the transactions can edit)
     const { transactionId } = req.params;
     const { date, name, amount, type, category, note } = req.body;
 
