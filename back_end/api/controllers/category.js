@@ -60,8 +60,37 @@ const addCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   const response = { ok: true, error: null };
+
+  const { userId } = req.params;
+  const { type, category } = req.body;
+
   try {
-    // TODO: Write function
+    if (!userId || typeof userId !== 'number') {
+      throw new Error(`The given user id was not found: ${userId}`)
+    }
+
+    // get the user
+    const user = await User.findById(userId)
+
+    if (!user) {
+        throw new Error(`The given user was not found in the database.`)
+    }
+
+    const storedCategory = await Category.findOne({ where: {
+      type: type,
+      name: category
+    }})
+
+    if (!storedCategory) {
+      throw new Error('The given category was not found in the database.')
+    }
+
+    const result = await user.removeCategory(storedCategory)
+
+    if (result !== 1) {
+      throw new Error(`The ${type} with a name of ${category} was not deleted for the user with the id of ${userId}.`)
+    }
+
   } catch (err) {
     response.ok = false;
     response.error = err.message;
