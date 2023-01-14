@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const userRouter = express.Router();
 const {
   loginUser,
   registerUser,
@@ -7,9 +7,9 @@ const {
   deleteUser,
 } = require('../controllers/users');
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-router.put('/:userId', editUser);
-router.delete('/:userId', deleteUser);
+userRouter.post('/register', registerUser);
+userRouter.post('/login', loginUser);
+userRouter.put('/:userId', editUser);
+userRouter.delete('/:userId', deleteUser);
 
-module.exports = router;
+module.exports = { userRouter };
