@@ -170,7 +170,10 @@ const getTransaction = async (req, res) => {
 const getTransactions = async (req, res) => {
   const response = { ok: true, error: null, transactions: null };
   try {
-    const rawData = req.params;
+    const rawData = { 
+      userId: req.params.userId,
+      ...req.query
+    }
     const filter = DataPreparation.createTransactionFilter(rawData);
 
     if (!filter.ok) {
