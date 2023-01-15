@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const {
   describe,
   test,
@@ -25,11 +26,12 @@ describe('users controller', () => {
       };
       res = {
         json: (str) => JSON.stringify(str),
+        setHeader: () => true
       };
     });
 
     test('should return object with error if username already exists', async () => {
-      jest.spyOn(User, 'findOne').mockResolvedValue({ name: 'john ', id: 1 });
+      jest.spyOn(User, 'findOne').mockResolvedValue({ name: 'john ' });
 
       expect(JSON.parse(await registerUser(req, res))).toMatchObject({
         ok: false,
@@ -62,7 +64,7 @@ describe('users controller', () => {
       });
     });
 
-    test('should create a new user in the database and return its id', async () => {
+    test('should create a new user in the database', async () => {
       jest.spyOn(User, 'findOne').mockResolvedValue(null);
       jest.spyOn(User, 'create').mockResolvedValue({
         id: 1,
@@ -72,10 +74,13 @@ describe('users controller', () => {
       });
       jest.spyOn(Validation, 'isEmailValid').mockReturnValue({ ok: true });
       jest.spyOn(Validation, 'isPasswordValid').mockReturnValue({ ok: true });
+      jest.spyOn(jwt, 'sign').mockReturnValue('jwtstringhere');
 
-      expect(JSON.parse(await registerUser(req, res))).toMatchObject({
+      const result = JSON.parse(await registerUser(req, res))
+
+      expect(result).toMatchObject({
         ok: true,
-        userId: 1,
+        token: 'jwtstringhere'
       });
     });
 

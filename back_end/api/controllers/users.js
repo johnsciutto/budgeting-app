@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { Validation } = require('../../config/utils/validation');
 const { Security } = require('../../config/utils/security');
@@ -11,7 +12,7 @@ const { Security } = require('../../config/utils/security');
  */
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
-  const response = { ok: false, error: null, userId: null };
+  const response = { ok: false, error: null };
   try {
     // check that the username doesn't exist
     const user = await User.findOne({ where: { username } });
@@ -45,7 +46,14 @@ const registerUser = async (req, res) => {
     });
 
     response.ok = true;
-    response.userId = newUser.id;
+
+    const token = jwt.sign({ userId: newUser.id }, process.env.TOKEN_SECRET, {
+      algorithm: 'RS256',
+    });
+
+    res.setHeader('Authorization', `Bearer ${token}`);
+
+    response.token = token;
   } catch (err) {
     response.ok = false;
     response.error = err.message;
