@@ -52,9 +52,11 @@ describe('Security', () => {
       expect(() => Security.generateToken()).toThrowError();
     });
 
-    test('it should create a token with the claims "sub", "iat" and "exp"', () => {
+    test('it should create a token with the claims "iss", "sub", "iat" and "exp"', () => {
       const result = Security.generateToken(1);
       const decoded = jwt.decode(result);
+      expect(decoded).toHaveProperty('iss');
+      expect(decoded.iss).toBe('BudgetingApp');
       expect(decoded).toHaveProperty('sub');
       expect(decoded.sub).toBe(1);
       expect(decoded).toHaveProperty('iat');

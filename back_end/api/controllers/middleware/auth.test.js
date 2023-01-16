@@ -32,6 +32,19 @@ describe('protectRoute', () => {
     expect(res.message).toBe('Bearer token is missing');
   });
 
+  test("should return an error if the decoded token doesn't have the iss", () => {
+    req.headers['authorization'] = 'Bearer sometokenvaluehere';
+
+    jest
+      .spyOn(jwt, 'verify')
+      .mockReturnValueOnce({ iat: 1123123, exp: 1234234234, sub: 1 });
+
+    protectRoute(req, res, next);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.message).toBe('Token is invalid');
+  });
+
   test("should return an error if the decoded token doesn't have the sub", () => {
     req.headers['authorization'] = 'Bearer sometokenvaluehere';
 
@@ -75,6 +88,7 @@ describe('protectRoute', () => {
     req.headers['authorization'] = 'Bearer sometokenvaluehere';
 
     jest.spyOn(jwt, 'verify').mockReturnValueOnce({
+      iss: 'BudgetingApp',
       sub: 1123123,
       iat: Math.floor(Date.now() / 1000) + 1000,
       exp: Math.floor(Date.now() / 1000) + 3000,
@@ -90,6 +104,7 @@ describe('protectRoute', () => {
     req.headers['authorization'] = 'Bearer sometokenvaluehere';
 
     jest.spyOn(jwt, 'verify').mockReturnValueOnce({
+      iss: 'BudgetingApp',
       sub: 1123123,
       iat: Math.floor(Date.now() / 1000) - 1000,
       exp: Math.floor(Date.now() / 1000) - 1,

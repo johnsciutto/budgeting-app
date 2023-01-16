@@ -33,6 +33,7 @@ class Security {
       }
 
       const payload = {
+        iss: 'BudgetingApp',
         sub: userId,
         iat: Math.floor(Date.now() / 1000),
         exp: Math.floor(Date.now() / 1000) + daysToExpire * 24 * 60 * 60,
