@@ -97,7 +97,7 @@ describe('protectRoute', () => {
     protectRoute(req, res, next);
 
     expect(res.statusCode).toBe(401);
-    expect(res.message).toBe('Token has expired');
+    expect(res.message).toBe('Token is invalid');
   });
 
   test('should return an error if the token expired', () => {
