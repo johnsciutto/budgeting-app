@@ -35,7 +35,7 @@ class Security {
       const payload = {
         userId: userId,
         iat: Math.floor(Date.now() / 1000),
-        eat: Math.floor(Date.now() / 1000) + daysToExpire * 24 * 60 * 60,
+        exp: Math.floor(Date.now() / 1000) + daysToExpire * 24 * 60 * 60,
       };
 
       const token = jwt.sign(payload, process.env.TOKEN_SECRET);

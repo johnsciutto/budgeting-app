@@ -52,13 +52,13 @@ describe('Security', () => {
       expect(() => Security.generateToken()).toThrowError();
     });
 
-    test('it should create a token with the claims "userId", "iat" and "eat"', () => {
+    test('it should create a token with the claims "userId", "iat" and "exp"', () => {
       const result = Security.generateToken(1);
       const decoded = jwt.decode(result);
       expect(decoded).toHaveProperty('userId');
       expect(decoded.userId).toBe(1);
       expect(decoded).toHaveProperty('iat');
-      expect(decoded).toHaveProperty('eat');
+      expect(decoded).toHaveProperty('exp');
     });
 
     test('should be able to take in a second parameter with the number of days to expire the token', () => {
@@ -68,8 +68,8 @@ describe('Security', () => {
       expect(decoded).toHaveProperty('userId');
       expect(decoded.userId).toBe(1);
       expect(decoded).toHaveProperty('iat');
-      expect(decoded).toHaveProperty('eat');
-      expect(decoded.eat).toBeCloseTo(
+      expect(decoded).toHaveProperty('exp');
+      expect(decoded.exp).toBeCloseTo(
         Math.floor(Date.now() / 1000) + numberOfDays * 24 * 60 * 60
       );
     });

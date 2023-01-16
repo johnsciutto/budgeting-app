@@ -37,7 +37,7 @@ describe('protectRoute', () => {
 
     jest
       .spyOn(jwt, 'verify')
-      .mockReturnValueOnce({ iat: 1123123, eat: 1234234234 });
+      .mockReturnValueOnce({ iat: 1123123, exp: 1234234234 });
 
     protectRoute(req, res, next);
 
@@ -50,7 +50,7 @@ describe('protectRoute', () => {
 
     jest
       .spyOn(jwt, 'verify')
-      .mockReturnValueOnce({ userId: 1123123, eat: 1234234234 });
+      .mockReturnValueOnce({ userId: 1123123, exp: 1234234234 });
 
     protectRoute(req, res, next);
 
@@ -58,7 +58,7 @@ describe('protectRoute', () => {
     expect(res.message).toBe('Token is invalid');
   });
 
-  test("should return an error if the decoded token doesn't have the eat", () => {
+  test("should return an error if the decoded token doesn't have the exp", () => {
     req.headers['authorization'] = 'Bearer sometokenvaluehere';
 
     jest
@@ -77,7 +77,7 @@ describe('protectRoute', () => {
     jest.spyOn(jwt, 'verify').mockReturnValueOnce({
       userId: 1123123,
       iat: Math.floor(Date.now() / 1000) + 1000,
-      eat: Math.floor(Date.now() / 1000) + 3000,
+      exp: Math.floor(Date.now() / 1000) + 3000,
     });
 
     protectRoute(req, res, next);
@@ -92,7 +92,7 @@ describe('protectRoute', () => {
     jest.spyOn(jwt, 'verify').mockReturnValueOnce({
       userId: 1123123,
       iat: Math.floor(Date.now() / 1000) - 1000,
-      eat: Math.floor(Date.now() / 1000) - 1,
+      exp: Math.floor(Date.now() / 1000) - 1,
     });
 
     protectRoute(req, res, next);

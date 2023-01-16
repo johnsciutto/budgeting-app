@@ -13,7 +13,9 @@ const protectRoute = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
 
-    if (!decoded.userId || !decoded.iat || !decoded.eat) {
+    // TODO: Add check for the iss (issuer)
+
+    if (!decoded.userId || !decoded.iat || !decoded.exp) {
       throw new Error('Token is invalid');
     }
 
@@ -21,7 +23,7 @@ const protectRoute = (req, res, next) => {
       throw new Error('Token is invalid');
     }
 
-    if (decoded.eat < Date.now()) {
+    if (decoded.exp < Date.now()) {
       throw new Error('Token has expired');
     }
 
