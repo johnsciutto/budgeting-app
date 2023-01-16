@@ -1,5 +1,5 @@
 const { describe, test, expect } = require('@jest/globals');
-const { Transaction, User, Category } = require('../models/index');
+const { User, Category } = require('../models/index');
 const { getCategories, addCategory, deleteCategory } = require('./category');
 
 describe('category controller', () => {

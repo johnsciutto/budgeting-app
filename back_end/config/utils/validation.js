@@ -194,7 +194,6 @@ class Validation {
           `Expected the type to be either "income" or "expense". Received: ${type}`
         );
       }
-
     } catch (err) {
       response.ok = false;
       response.error = err.message;

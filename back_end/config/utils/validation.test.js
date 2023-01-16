@@ -1,6 +1,4 @@
 const { describe, test, expect } = require('@jest/globals');
-const { type } = require('express/lib/response');
-const { Transaction } = require('sequelize');
 const { Validation } = require('./validation');
 
 describe('Validation', () => {

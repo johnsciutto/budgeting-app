@@ -108,7 +108,6 @@ const seedDatabase = async () => {
         await user.addCategory(cat);
       }
     }
-
   } catch (err) {
     console.error(err);
     process.exitCode = 1;

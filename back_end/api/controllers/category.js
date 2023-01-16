@@ -64,31 +64,34 @@ const deleteCategory = async (req, res) => {
 
   try {
     if (!userId || typeof userId !== 'number') {
-      throw new Error(`The given user id was not found: ${userId}`)
+      throw new Error(`The given user id was not found: ${userId}`);
     }
 
     // get the user
-    const user = await User.findById(userId)
+    const user = await User.findById(userId);
 
     if (!user) {
-        throw new Error(`The given user was not found in the database.`)
+      throw new Error(`The given user was not found in the database.`);
     }
 
-    const storedCategory = await Category.findOne({ where: {
-      type: type,
-      name: category
-    }})
+    const storedCategory = await Category.findOne({
+      where: {
+        type: type,
+        name: category,
+      },
+    });
 
     if (!storedCategory) {
-      throw new Error('The given category was not found in the database.')
+      throw new Error('The given category was not found in the database.');
     }
 
-    const result = await user.removeCategory(storedCategory)
+    const result = await user.removeCategory(storedCategory);
 
     if (result !== 1) {
-      throw new Error(`The ${type} with a name of ${category} was not deleted for the user with the id of ${userId}.`)
+      throw new Error(
+        `The ${type} with a name of ${category} was not deleted for the user with the id of ${userId}.`
+      );
     }
-
   } catch (err) {
     response.ok = false;
     response.error = err.message;

@@ -1,4 +1,4 @@
-const { describe, test, expect } = require('@jest/globals');
+const { describe, test, expect, afterEach } = require('@jest/globals');
 const jwt = require('jsonwebtoken');
 const { protectRoute } = require('./auth');
 
