@@ -1,4 +1,5 @@
 const { describe, test, expect } = require('@jest/globals');
+const jwt = require('jsonwebtoken');
 const { protectRoute } = require('./auth');
 
 describe('protectRoute', () => {
@@ -31,16 +32,74 @@ describe('protectRoute', () => {
     expect(res.message).toBe('Bearer token is missing');
   });
 
-  // TODO: This is next...
-  test.todo(
-    "should return an error if the decoded token doesn't have the necessary properties"
-  );
+  test("should return an error if the decoded token doesn't have the userId", () => {
+    req.headers['authorization'] = 'Bearer sometokenvaluehere';
 
-  test.todo(
-    'should return an error if the issue time is greater than the current time'
-  );
+    jest
+      .spyOn(jwt, 'verify')
+      .mockReturnValueOnce({ iat: 1123123, eat: 1234234234 });
 
-  test.todo('should return an error if the token expired');
+    protectRoute(req, res, next);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.message).toBe('Token is invalid');
+  });
+
+  test("should return an error if the decoded token doesn't have the iat", () => {
+    req.headers['authorization'] = 'Bearer sometokenvaluehere';
+
+    jest
+      .spyOn(jwt, 'verify')
+      .mockReturnValueOnce({ userId: 1123123, eat: 1234234234 });
+
+    protectRoute(req, res, next);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.message).toBe('Token is invalid');
+  });
+
+  test("should return an error if the decoded token doesn't have the eat", () => {
+    req.headers['authorization'] = 'Bearer sometokenvaluehere';
+
+    jest
+      .spyOn(jwt, 'verify')
+      .mockReturnValueOnce({ userId: 1123123, iat: 1234234234 });
+
+    protectRoute(req, res, next);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.message).toBe('Token is invalid');
+  });
+
+  test('should return an error if the issue time is greater than the current time', () => {
+    req.headers['authorization'] = 'Bearer sometokenvaluehere';
+
+    jest.spyOn(jwt, 'verify').mockReturnValueOnce({
+      userId: 1123123,
+      iat: Math.floor(Date.now() / 1000) + 1000,
+      eat: Math.floor(Date.now() / 1000) + 3000,
+    });
+
+    protectRoute(req, res, next);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.message).toBe('Token has expired');
+  });
+
+  test('should return an error if the token expired', () => {
+    req.headers['authorization'] = 'Bearer sometokenvaluehere';
+
+    jest.spyOn(jwt, 'verify').mockReturnValueOnce({
+      userId: 1123123,
+      iat: Math.floor(Date.now() / 1000) - 1000,
+      eat: Math.floor(Date.now() / 1000) - 1,
+    });
+
+    protectRoute(req, res, next);
+
+    expect(res.statusCode).toBe(401);
+    expect(res.message).toBe('Token has expired');
+  });
 
   afterEach(() => {
     res.statusCode = null;
@@ -48,5 +107,7 @@ describe('protectRoute', () => {
     res.headers = {};
 
     req.headers = {};
+
+    jest.restoreAllMocks();
   });
 });
