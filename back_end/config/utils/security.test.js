@@ -1,5 +1,7 @@
 const { describe, test, expect } = require('@jest/globals');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 const { Security } = require('./security');
 
 describe('Security', () => {
@@ -34,6 +36,42 @@ describe('Security', () => {
   describe('isUserPassword', () => {
     test('should exist', () => {
       expect(Security.isUserPassword).not.toBeUndefined();
+    });
+  });
+
+  describe('generateToken', () => {
+    test('should exist', () => {
+      expect(Security.generateToken).not.toBeUndefined();
+    });
+
+    test('it should throw an error if no user id was given', () => {
+      expect(() => Security.generateToken()).toThrowError();
+    });
+
+    test('it should throw an error if no user secret or private key was given', () => {
+      expect(() => Security.generateToken()).toThrowError();
+    });
+
+    test('it should create a token with the claims "userId", "iat" and "eat"', () => {
+      const result = Security.generateToken(1);
+      const decoded = jwt.decode(result);
+      expect(decoded).toHaveProperty('userId');
+      expect(decoded.userId).toBe(1);
+      expect(decoded).toHaveProperty('iat');
+      expect(decoded).toHaveProperty('eat');
+    });
+
+    test('should be able to take in a second parameter with the number of days to expire the token', () => {
+      const numberOfDays = 30;
+      const result = Security.generateToken(1, numberOfDays);
+      const decoded = jwt.decode(result);
+      expect(decoded).toHaveProperty('userId');
+      expect(decoded.userId).toBe(1);
+      expect(decoded).toHaveProperty('iat');
+      expect(decoded).toHaveProperty('eat');
+      expect(decoded.eat).toBeCloseTo(
+        Math.floor(Date.now() / 1000) + numberOfDays * 24 * 60 * 60
+      );
     });
   });
 });

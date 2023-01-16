@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 class Security {
   static SALT_ROUNDS = 10;
@@ -23,6 +24,25 @@ class Security {
   static async isUserPassword(user, pass) {
     const result = await bcrypt.compare(pass, user.password);
     return result;
+  }
+
+  static generateToken(userId, daysToExpire = 1) {
+    try {
+      if (!userId) {
+        throw new Error();
+      }
+
+      const payload = {
+        userId: userId,
+        iat: Math.floor(Date.now() / 1000),
+        eat: Math.floor(Date.now() / 1000) + daysToExpire * 24 * 60 * 60,
+      };
+
+      const token = jwt.sign(payload, process.env.TOKEN_SECRET);
+      return token;
+    } catch (error) {
+      throw new Error(`Error generating JWT token: ${error}`);
+    }
   }
 }
 
