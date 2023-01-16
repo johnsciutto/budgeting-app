@@ -271,11 +271,11 @@ describe('users controller', () => {
     const res = { json: (str) => JSON.stringify(str) };
 
     beforeEach(() => {
-      req = { params: { userId: 1 } };
+      req = { user: { id: 1 } };
     });
 
     test('should fail if the userId is missing', async () => {
-      req.params.userId = null;
+      req.user.id = null;
       expect(JSON.parse(await deleteUser(req, res))).toMatchObject({
         ok: false,
         error: 'The userId is incorrect: null',

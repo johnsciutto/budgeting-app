@@ -76,7 +76,7 @@ const editUser = async (req, res) => {
   const response = { ok: true, error: null };
   try {
     const { username, email, oldPassword, newPassword } = req.body;
-    const { userId } = req.params;
+    const userId = req.user?.id;
 
     const changeObj = {};
 
@@ -185,7 +185,7 @@ const loginUser = async (req, res) => {
  */
 const deleteUser = async (req, res) => {
   const response = { ok: true, error: null };
-  const { userId } = req.params;
+  const userId = req.user?.id;
 
   try {
     if (!userId) {
