@@ -21,6 +21,9 @@ describe('transaction controller', () => {
 
     beforeEach(() => {
       req = {
+        user: {
+          id: 1
+        },
         body: {
           date: new Date(),
           name: 'Supermarket',

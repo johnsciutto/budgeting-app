@@ -6,7 +6,7 @@ const addTransaction = async (req, res) => {
   const response = { ok: true, error: null, transactionId: null };
   try {
     const { name, amount, date, note, type, category } = req.body;
-    const { userId } = req.params;
+    const userId = req.user?.id;
 
     const isValid = Validation.isValidTransaction({ name, amount, date, note });
     if (!isValid.ok) {
@@ -45,6 +45,7 @@ const editTransaction = async (req, res) => {
   const response = { ok: true, error: null };
   try {
     // NOTE: Add security to these routes (make sure that only the owner of the transactions can edit)
+    const userId = req.user?.id;
     const { transactionId } = req.params;
     const { date, name, amount, type, category, note } = req.body;
 
@@ -97,7 +98,7 @@ const editTransaction = async (req, res) => {
     }
 
     const result = await Transaction.update(updatedProperties, {
-      where: { id: transactionId },
+      where: { id: transactionId, userId },
     });
 
     if (result === 0) {
@@ -113,6 +114,7 @@ const editTransaction = async (req, res) => {
 const deleteTransaction = async (req, res) => {
   const response = { ok: true, error: null };
   try {
+    const userId = req.user?.id;
     const transactionId = req.params.transactionId;
 
     if (typeof transactionId !== 'number') {
@@ -122,7 +124,7 @@ const deleteTransaction = async (req, res) => {
     }
 
     const result = await Transaction.destroy({
-      where: { id: transactionId },
+      where: { id: transactionId, userId },
       logging: true,
     });
     if (result === 0) {
@@ -140,6 +142,7 @@ const deleteTransaction = async (req, res) => {
 const getTransaction = async (req, res) => {
   const response = { ok: true, error: null, transaction: null };
   try {
+    const userId = req.user?.id;
     const transactionId = parseInt(req.params.transactionId);
 
     if (isNaN(transactionId)) {
@@ -152,6 +155,7 @@ const getTransaction = async (req, res) => {
       throw new Error(`The given transaction id is invalid: ${transactionId}`);
     }
 
+    // TODO: Add the userId data to the transaction
     const transaction = await Transaction.findById(transactionId);
 
     if (!transaction) {
@@ -171,10 +175,10 @@ const getTransaction = async (req, res) => {
 const getTransactions = async (req, res) => {
   const response = { ok: true, error: null, transactions: null };
   try {
-    const rawData = { 
-      userId: req.params.userId,
-      ...req.query
-    }
+    const rawData = {
+      userId: req.user?.id,
+      ...req.query,
+    };
     const filter = DataPreparation.createTransactionFilter(rawData);
 
     if (!filter.ok) {
