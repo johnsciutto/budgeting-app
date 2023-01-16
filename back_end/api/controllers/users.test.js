@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 const {
   describe,
   test,
@@ -26,7 +26,7 @@ describe('users controller', () => {
       };
       res = {
         json: (str) => JSON.stringify(str),
-        setHeader: () => true
+        setHeader: () => true,
       };
     });
 
@@ -76,11 +76,11 @@ describe('users controller', () => {
       jest.spyOn(Validation, 'isPasswordValid').mockReturnValue({ ok: true });
       jest.spyOn(jwt, 'sign').mockReturnValue('jwtstringhere');
 
-      const result = JSON.parse(await registerUser(req, res))
+      const result = JSON.parse(await registerUser(req, res));
 
       expect(result).toMatchObject({
         ok: true,
-        token: 'jwtstringhere'
+        token: 'jwtstringhere',
       });
     });
 
@@ -119,12 +119,16 @@ describe('users controller', () => {
       });
     });
 
-    test("should return an object with 'ok' and a 'userId' ff the user is found and the password is correct", async () => {
+    test("should return an object with 'ok' and a token if the user is found and the password is correct", async () => {
+      res.setHeader = () => true;
       jest.spyOn(User, 'findOne').mockReturnValue({ id: 1 });
       jest.spyOn(Security, 'isUserPassword').mockReturnValue(true);
-      expect(JSON.parse(await loginUser(req, res))).toMatchObject({
+      jest.spyOn(Security, 'generateToken').mockReturnValue('jwtstringhere');
+
+      const result = JSON.parse(await loginUser(req, res));
+      expect(result).toMatchObject({
         ok: true,
-        userId: 1,
+        token: 'jwtstringhere',
       });
     });
 
@@ -250,7 +254,7 @@ describe('users controller', () => {
       jest.spyOn(Validation, 'isPasswordValid').mockReturnValue({ ok: true });
       jest
         .spyOn(Security, 'hashPassword')
-        .mockReturnValue({ ok: true, password: 'newHashedPassword12345'});
+        .mockReturnValue({ ok: true, password: 'newHashedPassword12345' });
       jest.spyOn(User, 'update').mockResolvedValue([1]);
       expect(JSON.parse(await editUser(req, res))).toMatchObject({
         ok: true,

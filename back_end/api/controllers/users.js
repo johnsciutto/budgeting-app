@@ -162,8 +162,12 @@ const loginUser = async (req, res) => {
       throw new Error(`Invalid username or password`);
     }
 
+    const token = Security.generateToken(user.id);
+
+    res.setHeader('Authorization', `Bearer ${token}`);
+
     response.ok = true;
-    response.userId = user.id;
+    response.token = token;
   } catch (error) {
     response.ok = false;
     response.error = error.message;
