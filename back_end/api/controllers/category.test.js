@@ -11,15 +11,15 @@ describe('category controller', () => {
   describe('getCategories', () => {
     beforeEach(() => {
       req = {
-        params: {
-          userId: 1,
+        user: {
+          id: 1,
         },
         body: {},
       };
     });
 
     test('should create an error object if there is no user id passed.', async () => {
-      req.params.userId = undefined;
+      req.user.id = undefined;
 
       const result = JSON.parse(await getCategories(req, res));
 
@@ -27,12 +27,12 @@ describe('category controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        `The given user id was not found: ${req.params.userId}`
+        `The given user id was not found: ${req.user.id}`
       );
     });
 
     test('should create an error object if the user id is not valid.', async () => {
-      req.params.userId = 'testing';
+      req.user.id = 'testing';
 
       const result = JSON.parse(await getCategories(req, res));
 
@@ -40,12 +40,12 @@ describe('category controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        `The given user id was not found: ${req.params.userId}`
+        `The given user id was not found: ${req.user.id}`
       );
     });
 
     test('should create an error object if the user is not found in the database.', async () => {
-      req.params.userId = 1234321;
+      req.user.id = 1234321;
 
       jest.spyOn(User, 'findById').mockResolvedValue(null);
 
@@ -61,7 +61,7 @@ describe('category controller', () => {
   });
 
   test('should produce an object with the categories if the user has categories', async () => {
-    req.params.userId = 1;
+    req.user.id = 1;
 
     const mockedGetAllCategoriesResult = {
       income: ['Paycheque', 'Etsy Shop'],
@@ -90,7 +90,7 @@ describe('category controller', () => {
 
   describe('addCategory', () => {
     test('should create an error object if there is no user id passed.', async () => {
-      req.params.userId = undefined;
+      req.user.id = undefined;
 
       const result = JSON.parse(await addCategory(req, res));
 
@@ -98,12 +98,12 @@ describe('category controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        `The given user id was not found: ${req.params.userId}`
+        `The given user id was not found: ${req.user.id}`
       );
     });
 
     test('should create an error object if the user id is not valid.', async () => {
-      req.params.userId = 'testing';
+      req.user.id = 'testing';
 
       const result = JSON.parse(await addCategory(req, res));
 
@@ -111,12 +111,12 @@ describe('category controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        `The given user id was not found: ${req.params.userId}`
+        `The given user id was not found: ${req.user.id}`
       );
     });
 
     test('should create an error object if the user was not found in the database', async () => {
-      req.params.userId = 1234321;
+      req.user.id = 1234321;
 
       jest.spyOn(User, 'findById').mockResolvedValue(null);
 
@@ -131,7 +131,7 @@ describe('category controller', () => {
     });
 
     test('should return a success object if the category was added to the user', async () => {
-      req.params.userId = 1;
+      req.user.id = 1;
       req.body.type = 'expense';
       req.body.category = 'New Category';
 
@@ -165,8 +165,8 @@ describe('category controller', () => {
   describe('deleteCategory', () => {
     beforeEach(() => {
       req = {
-        params: {
-          userId: 1,
+        user: {
+          id: 1,
         },
         body: {},
       };
@@ -177,7 +177,7 @@ describe('category controller', () => {
     });
 
     test('should create an error object if there is no user id passed.', async () => {
-      req.params.userId = undefined;
+      req.user.id = undefined;
 
       const result = JSON.parse(await deleteCategory(req, res));
 
@@ -185,12 +185,12 @@ describe('category controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        `The given user id was not found: ${req.params.userId}`
+        `The given user id was not found: ${req.user.id}`
       );
     });
 
     test('should create an error object if the user id is not valid.', async () => {
-      req.params.userId = 'testing';
+      req.user.id = 'testing';
 
       const result = JSON.parse(await deleteCategory(req, res));
 
@@ -198,12 +198,12 @@ describe('category controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        `The given user id was not found: ${req.params.userId}`
+        `The given user id was not found: ${req.user.id}`
       );
     });
 
     test('should create an error object if the user was not found in the database', async () => {
-      req.params.userId = 1234321;
+      req.user.id = 1234321;
 
       jest.spyOn(User, 'findById').mockResolvedValue(null);
 
@@ -218,7 +218,7 @@ describe('category controller', () => {
     });
 
     test('should create an error object if the category was not found for that user', async () => {
-      req.params.userId = 1;
+      req.user.id = 1;
       req.body = {
         type: 'expense',
         category: 'Groceries',
@@ -240,12 +240,12 @@ describe('category controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        `The ${req.body.type} with a name of ${req.body.category} was not deleted for the user with the id of ${req.params.userId}.`
+        `The ${req.body.type} with a name of ${req.body.category} was not deleted for the user with the id of ${req.user.id}.`
       );
     });
 
     test('should create a success object if the category was deleted for that user', async () => {
-      req.params.userId = 1;
+      req.user.id = 1;
       req.body = {
         type: 'expense',
         category: 'Groceries',

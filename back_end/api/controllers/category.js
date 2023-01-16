@@ -3,7 +3,7 @@ const { Category, User } = require('../models/index');
 const getCategories = async (req, res) => {
   const response = { ok: true, error: null, categories: null };
   try {
-    const { userId } = req.params;
+    const userId = req.user?.id;
 
     if (!userId || typeof userId === 'string') {
       throw new Error(`The given user id was not found: ${userId}`);
@@ -28,7 +28,7 @@ const getCategories = async (req, res) => {
 const addCategory = async (req, res) => {
   const response = { ok: true, error: null, categories: null };
   try {
-    const { userId } = req.params;
+    const userId = req.user?.id;
     const { type, category } = req.body;
 
     if (!userId || typeof userId === 'string') {
@@ -59,7 +59,7 @@ const addCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   const response = { ok: true, error: null };
 
-  const { userId } = req.params;
+  const userId = req.user?.id;
   const { type, category } = req.body;
 
   try {
