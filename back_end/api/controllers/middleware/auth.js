@@ -13,7 +13,7 @@ const protectRoute = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
 
-    if (!decoded.userId || !decoded.iat || !decoded.exp) {
+    if (!decoded.userId || !decoded.iat || !decoded.eat) {
       throw new Error('Token is invalid');
     }
 
