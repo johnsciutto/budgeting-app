@@ -15,7 +15,7 @@ const protectRoute = (req, res, next) => {
 
     // TODO: Add check for the iss (issuer)
 
-    if (!decoded.userId || !decoded.iat || !decoded.exp) {
+    if (!decoded.sub || !decoded.iat || !decoded.exp) {
       throw new Error('Token is invalid');
     }
 
@@ -27,7 +27,7 @@ const protectRoute = (req, res, next) => {
       throw new Error('Token has expired');
     }
 
-    req.user = { id: decoded.userId };
+    req.user = { id: decoded.sub };
     next();
   } catch (error) {
     let message = error.message;

@@ -52,11 +52,11 @@ describe('Security', () => {
       expect(() => Security.generateToken()).toThrowError();
     });
 
-    test('it should create a token with the claims "userId", "iat" and "exp"', () => {
+    test('it should create a token with the claims "sub", "iat" and "exp"', () => {
       const result = Security.generateToken(1);
       const decoded = jwt.decode(result);
-      expect(decoded).toHaveProperty('userId');
-      expect(decoded.userId).toBe(1);
+      expect(decoded).toHaveProperty('sub');
+      expect(decoded.sub).toBe(1);
       expect(decoded).toHaveProperty('iat');
       expect(decoded).toHaveProperty('exp');
     });
@@ -65,8 +65,8 @@ describe('Security', () => {
       const numberOfDays = 30;
       const result = Security.generateToken(1, numberOfDays);
       const decoded = jwt.decode(result);
-      expect(decoded).toHaveProperty('userId');
-      expect(decoded.userId).toBe(1);
+      expect(decoded).toHaveProperty('sub');
+      expect(decoded.sub).toBe(1);
       expect(decoded).toHaveProperty('iat');
       expect(decoded).toHaveProperty('exp');
       expect(decoded.exp).toBeCloseTo(

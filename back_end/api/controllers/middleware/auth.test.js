@@ -32,7 +32,7 @@ describe('protectRoute', () => {
     expect(res.message).toBe('Bearer token is missing');
   });
 
-  test("should return an error if the decoded token doesn't have the userId", () => {
+  test("should return an error if the decoded token doesn't have the sub", () => {
     req.headers['authorization'] = 'Bearer sometokenvaluehere';
 
     jest
@@ -50,7 +50,7 @@ describe('protectRoute', () => {
 
     jest
       .spyOn(jwt, 'verify')
-      .mockReturnValueOnce({ userId: 1123123, exp: 1234234234 });
+      .mockReturnValueOnce({ sub: 1123123, exp: 1234234234 });
 
     protectRoute(req, res, next);
 
@@ -63,7 +63,7 @@ describe('protectRoute', () => {
 
     jest
       .spyOn(jwt, 'verify')
-      .mockReturnValueOnce({ userId: 1123123, iat: 1234234234 });
+      .mockReturnValueOnce({ sub: 1123123, iat: 1234234234 });
 
     protectRoute(req, res, next);
 
@@ -75,7 +75,7 @@ describe('protectRoute', () => {
     req.headers['authorization'] = 'Bearer sometokenvaluehere';
 
     jest.spyOn(jwt, 'verify').mockReturnValueOnce({
-      userId: 1123123,
+      sub: 1123123,
       iat: Math.floor(Date.now() / 1000) + 1000,
       exp: Math.floor(Date.now() / 1000) + 3000,
     });
@@ -90,7 +90,7 @@ describe('protectRoute', () => {
     req.headers['authorization'] = 'Bearer sometokenvaluehere';
 
     jest.spyOn(jwt, 'verify').mockReturnValueOnce({
-      userId: 1123123,
+      sub: 1123123,
       iat: Math.floor(Date.now() / 1000) - 1000,
       exp: Math.floor(Date.now() / 1000) - 1,
     });
