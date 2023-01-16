@@ -21,7 +21,7 @@ const protectRoute = (req, res, next) => {
       throw new Error('Token is invalid');
     }
 
-    if (decoded.exp < Date.now()) {
+    if (decoded.eat < Date.now()) {
       throw new Error('Token has expired');
     }
 
