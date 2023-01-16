@@ -13,7 +13,6 @@ const protectRoute = (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
 
-    // TODO: Add check for the iss (issuer)
     if (decoded.iss !== 'BudgetingApp') {
       throw new Error('Token is invalid');
     }
