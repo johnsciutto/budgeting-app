@@ -155,10 +155,9 @@ const getTransaction = async (req, res) => {
       throw new Error(`The given transaction id is invalid: ${transactionId}`);
     }
 
-    // TODO: Add the userId data to the transaction
     const transaction = await Transaction.findById(transactionId);
 
-    if (!transaction) {
+    if (transaction?.userId !== userId) {
       throw new Error(
         `The transaction with the given id (${transactionId}) was not found.`
       );

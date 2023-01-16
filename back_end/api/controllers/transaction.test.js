@@ -131,6 +131,9 @@ describe('transaction controller', () => {
         params: {
           transactionId: 1,
         },
+        user: {
+          id: 1
+        }
       };
     });
 
@@ -185,6 +188,7 @@ describe('transaction controller', () => {
       });
 
       const result = JSON.parse(await getTransaction(req, res));
+
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(true);
       expect(result.error).toBe(null);
