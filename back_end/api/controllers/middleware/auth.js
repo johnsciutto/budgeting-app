@@ -11,9 +11,7 @@ const protectRoute = (req, res, next) => {
       throw new Error('Bearer token is missing');
     }
 
-    const decoded = jwt.verify(token, process.env.TOKEN_SECRET, {
-      algorithms: ['RS256'],
-    });
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
 
     if (!decoded.userId || !decoded.iat || !decoded.exp) {
       throw new Error('Token is invalid');
