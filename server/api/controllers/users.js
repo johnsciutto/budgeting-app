@@ -53,6 +53,7 @@ const registerUser = async (req, res) => {
 
     res.setHeader('Authorization', `Bearer ${token}`);
 
+    delete response.error
     response.token = token;
   } catch (err) {
     response.ok = false;
