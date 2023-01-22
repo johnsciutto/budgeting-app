@@ -1,4 +1,4 @@
-const { Category, User } = require('../models/index');
+const { Category, User } = require('../../db/models');
 
 const getCategories = async (req, res) => {
   const response = { ok: true, error: null, categories: null };

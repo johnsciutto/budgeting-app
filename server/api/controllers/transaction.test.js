@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const { describe, test, expect } = require('@jest/globals');
-const { Transaction, User, Category } = require('../models/index');
-const { DataPreparation } = require('../../config/utils/dataPreparation');
+const { Transaction, Category } = require('../../db/models');
+const { DataPreparation } = require('../../utils/dataPreparation');
 const {
   addTransaction,
   getTransaction,
@@ -9,7 +9,7 @@ const {
   editTransaction,
   deleteTransaction,
 } = require('./transaction');
-const { Validation } = require('../../config/utils/validation');
+const { Validation } = require('../../utils/validation');
 
 describe('transaction controller', () => {
   const res = {

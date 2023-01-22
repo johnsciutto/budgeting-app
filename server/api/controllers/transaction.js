@@ -1,6 +1,6 @@
-const { Transaction, Category } = require('../models/index');
-const { Validation } = require('../../config/utils/validation');
-const { DataPreparation } = require('../../config/utils/dataPreparation');
+const { Transaction, Category } = require('../../db/models');
+const { Validation } = require('../../utils/validation');
+const { DataPreparation } = require('../../utils/dataPreparation');
 
 const addTransaction = async (req, res) => {
   const response = { ok: true, error: null, transactionId: null };

@@ -1,5 +1,5 @@
-const sequelize = require('../config/db');
-const { User, Transaction, Category } = require('../api/models/index');
+const sequelize = require('../db/db');
+const { User, Transaction, Category } = require('../api/models');
 
 const SEED_PASS = 'pass12345';
 

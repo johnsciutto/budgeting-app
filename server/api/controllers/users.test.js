@@ -6,9 +6,9 @@ const {
   beforeEach,
   afterEach,
 } = require('@jest/globals');
-const User = require('../models/user');
-const { Validation } = require('../../config/utils/validation');
-const { Security } = require('../../config/utils/security');
+const User = require('../../db/models/user');
+const { Validation } = require('../../utils/validation');
+const { Security } = require('../../utils/security');
 const { registerUser, loginUser, editUser, deleteUser } = require('./users');
 
 describe('users controller', () => {

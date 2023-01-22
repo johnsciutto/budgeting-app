@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const { Validation } = require('../../config/utils/validation');
-const { Security } = require('../../config/utils/security');
+const User = require('../../db/models/user');
+const { Validation } = require('../../utils/validation');
+const { Security } = require('../../utils/security');
 
 /**
  * Register a new user into the system.
