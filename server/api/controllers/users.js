@@ -11,7 +11,6 @@ const { Security } = require('../../utils/security');
  * @param {object} res - the response
  */
 const registerUser = async (req, res) => {
-  console.log({ body: req.body });
   const { username, email, password } = req.body;
   const response = { ok: false, error: null };
   try {
