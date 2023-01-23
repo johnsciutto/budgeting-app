@@ -74,14 +74,27 @@ const registerUser = async (req, res) => {
 };
 
 /**
- * Edit a user.
+ * @description - This function is used to edit the current user's account
+ *                information. It expects a JSON object in the request body
+ *                with the properties 'username', 'email', 'oldPassword',
+ *                and 'newPassword' of the user. It uses the 'userId' property
+ *                from the request object to identify the user.
  *
+ * @function
  * @async
- * @param {object} req
- * @param {object} res
- * @returns {object} response
- * @property {boolean} response.ok
- * @property {string | undefined} response.error
+ * @param {Object} req - Express request object
+ * @param {Object | undefined} req.user - The user object
+ * @param {number | undefined} req.user.id - The user's id
+ * @param {Object} req.body - The request body
+ * @param {string | undefined} req.body.username - The user's new username
+ * @param {string | undefined} req.body.email - The user's new email
+ * @param {string | undefined} req.body.oldPassword - The user's old password
+ * @param {string | undefined} req.body.newPassword - The user's new password
+ * @param {Object} res - Express response object
+ * @returns {Object} response - JSON object with the following properties:
+ * @property {boolean} response.ok - Indicates the success or failure of the operation,
+ * @property {string | undefined} response.error - A description of the error. Only
+ *                                                 present if the operation failed.
  */
 const editUser = async (req, res) => {
   const response = { ok: true };
