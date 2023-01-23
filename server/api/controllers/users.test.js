@@ -25,6 +25,7 @@ describe('users controller', () => {
         },
       };
       res = {
+        status: () => null,
         json: (str) => JSON.stringify(str),
         setHeader: () => true,
       };
