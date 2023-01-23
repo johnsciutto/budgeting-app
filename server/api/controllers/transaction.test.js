@@ -84,7 +84,7 @@ describe('transaction controller', () => {
         .mockReturnValue(null);
 
       const result = JSON.parse(await addTransaction(req, res));
-      expect(result).toMatchObject({ ok: false, transactionId: null });
+      expect(result).toMatchObject({ ok: false });
       expect(mockValidTransaction).toHaveBeenCalledTimes(1);
       expect(mockFindOne).toHaveBeenCalledTimes(1);
       expect(mockCreateTransaction).toHaveBeenCalledTimes(1);
@@ -141,8 +141,6 @@ describe('transaction controller', () => {
       expect(result.error).toBe(
         'The given transaction id is invalid: undefined'
       );
-      expect(result).toHaveProperty('transaction');
-      expect(result.transaction).toBe(null);
     });
 
     test('should create an error object if the transactionId is not an interger', async () => {
@@ -151,8 +149,6 @@ describe('transaction controller', () => {
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(false);
       expect(result.error).toBe('The given transaction id is invalid: testing');
-      expect(result).toHaveProperty('transaction');
-      expect(result.transaction).toBe(null);
     });
 
     test('should create an error object if the transaction with the given id is not found on the database', async () => {
@@ -166,8 +162,6 @@ describe('transaction controller', () => {
       expect(result.error).toBe(
         `The transaction with the given id (${req.params.transactionId}) was not found.`
       );
-      expect(result).toHaveProperty('transaction');
-      expect(result.transaction).toBe(null);
     });
 
     test('should create a success object if a valid transactionId is passed', async () => {
@@ -187,7 +181,6 @@ describe('transaction controller', () => {
 
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(true);
-      expect(result.error).toBe(null);
       expect(result).toHaveProperty('transaction');
       expect(result.transaction).toStrictEqual({
         name: 'Supermarket',
@@ -280,8 +273,6 @@ describe('transaction controller', () => {
       const result = JSON.parse(await getTransactions(req, res));
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(true);
-      expect(result).toHaveProperty('error');
-      expect(result.error).toBe(null);
       expect(result).toHaveProperty('transactions');
       expect(result.transactions).toContainEqual({
         id: 1,
@@ -328,8 +319,6 @@ describe('transaction controller', () => {
 
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(true);
-      expect(result).toHaveProperty('error');
-      expect(result.error).toBe(null);
     });
 
     test('should throw an error if the transactionId is not a number.', async () => {
@@ -455,8 +444,6 @@ describe('transaction controller', () => {
 
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(true);
-      expect(result).toHaveProperty('error');
-      expect(result.error).toBe(null);
     });
 
     test('should update the properties of an object in the database successfully', async () => {
@@ -468,8 +455,6 @@ describe('transaction controller', () => {
 
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(true);
-      expect(result).toHaveProperty('error');
-      expect(result.error).toBe(null);
     });
 
     afterEach(() => {

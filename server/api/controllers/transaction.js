@@ -3,7 +3,7 @@ const { Validation } = require('../../utils/validation');
 const { DataPreparation } = require('../../utils/dataPreparation');
 
 const addTransaction = async (req, res) => {
-  const response = { ok: true, error: null, transactionId: null };
+  const response = { ok: true };
   let status = 200;
   try {
     const { name, amount, date, note, type, category } = req.body;
@@ -46,7 +46,7 @@ const addTransaction = async (req, res) => {
 };
 
 const editTransaction = async (req, res) => {
-  const response = { ok: true, error: null };
+  const response = { ok: true };
   let status = 200;
   try {
     const userId = req.user?.id;
@@ -121,7 +121,7 @@ const editTransaction = async (req, res) => {
 };
 
 const deleteTransaction = async (req, res) => {
-  const response = { ok: true, error: null };
+  const response = { ok: true };
   let status = 200;
   try {
     const userId = req.user?.id;
@@ -153,7 +153,7 @@ const deleteTransaction = async (req, res) => {
 };
 
 const getTransaction = async (req, res) => {
-  const response = { ok: true, error: null, transaction: null };
+  const response = { ok: true };
   let status = 200;
   try {
     const userId = req.user?.id;
@@ -190,7 +190,7 @@ const getTransaction = async (req, res) => {
 };
 
 const getTransactions = async (req, res) => {
-  const response = { ok: true, error: null, transactions: null };
+  const response = { ok: true };
   let status = 200;
   try {
     const rawData = {
@@ -207,8 +207,6 @@ const getTransactions = async (req, res) => {
     const result = await Transaction.findAllFiltered(filter.data);
     response.transactions = result.transactions;
     response.transactionCount = result.transactionCount;
-
-    response.ok = true;
   } catch (err) {
     response.ok = false;
     response.error = err.message;
