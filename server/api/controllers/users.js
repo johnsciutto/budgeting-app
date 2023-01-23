@@ -163,13 +163,25 @@ const editUser = async (req, res) => {
 };
 
 /**
- * Log in a user
+ * @description - This function logs in a user by validating the provided
+ *                username and password. If the provided credentials are
+ *                valid, it will generate a JWT token and return it in the
+ *                response. If the provided credentials are invalid, it will
+ *                throw an error with message 'Invalid username or password'
  *
+ * @function
  * @async
- * @returns {object} response
- * @property {boolean} response.ok
- * @property {string | undefined} response.error
- * @property {string | undefined} response.token
+ * @param {Object} req - Express request object
+ * @param {Object} req.body - The request body
+ * @param {string | undefined} req.body.username - The user's username
+ * @param {string | undefined} req.body.password - The user's password
+ * @param {Object} res - Express response object
+ * @returns {Object} response - JSON object
+ * @property {boolean} response.ok - Indicates the success or failure of the operation,
+ * @property {string | undefined} response.error - A description of the error. Only
+ *                                                 present if the operation failed.
+ * @property {string | undefined} response.token - The user token. Only present if the
+ *                                                 operation succeeded.
  */
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
