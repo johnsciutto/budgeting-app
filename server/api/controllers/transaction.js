@@ -2,6 +2,23 @@ const { Transaction, Category } = require('../../db/models');
 const { Validation } = require('../../utils/validation');
 const { DataPreparation } = require('../../utils/dataPreparation');
 
+/**
+ * @description - This function is used to add a new transaction to the database. It expects a JSON
+ *                object in the request body with the properties 'name', 'amount', 'date', 'note',
+ *                'type', and 'category' of the transaction, and uses the 'userId' property from
+ *                the request object to associate the transaction with the user.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} response - JSON object with the following properties:
+ * @property {boolean} response.ok - Indicates the success or failure of the operation,
+ * @property {string | undefined} response.error - A description of the error. Only present if the
+ *                                                 operation failed.
+ * @property {number | undefined} response.transactionId - The id of the newly created transaction.
+ *                                                         Only present if the operation succeeded.
+ */
 const addTransaction = async (req, res) => {
   const response = { ok: true };
   let status = 200;
