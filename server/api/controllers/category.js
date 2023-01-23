@@ -112,6 +112,22 @@ const addCategory = async (req, res) => {
   return res.json(response);
 };
 
+/**
+ * @description - This function is used to delete a category associated with a
+ *                user from the database. It expects a JSON object in the
+ *                request body with the properties 'type' and 'category' of the
+ *                category, and uses the 'userId' property from the request
+ *                object to identify the user.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} response - JSON object with the following properties:
+ * @property {boolean} response.ok - Indicates the success or failure of the operation,
+ * @property {string | undefined} response.error - A description of the error.
+ *                                                 Only present if the operation failed.
+ */
 const deleteCategory = async (req, res) => {
   const response = { ok: true };
   let status = 200;
