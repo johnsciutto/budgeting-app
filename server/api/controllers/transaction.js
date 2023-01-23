@@ -211,6 +211,26 @@ const deleteTransaction = async (req, res) => {
   return res.json(response);
 };
 
+/**
+ * @description - This function is used to retrieve a specific transaction from
+ *                the database. It expects the 'transactionId' as a parameter
+ *                in the request and uses the 'userId' property from the request
+ *                object to check that the user is the owner of the transaction.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Object} req.params - The request parameters
+ * @param {number} req.params.transactionId - The id of the transaction to be retrieved
+ * @returns {Object} response - JSON object with the following properties:
+ * @property {boolean} response.ok - Indicates the success or failure of the operation.
+ * @property {string | undefined} response.error - A description of the error.
+ *                                                 Only present if the operation failed.
+ * @property {Object | undefined} response.transaction - The transaction object. Only
+ *                                                        present if the operation succeeded.
+ *
+ */
 const getTransaction = async (req, res) => {
   const response = { ok: true };
   let status = 200;
