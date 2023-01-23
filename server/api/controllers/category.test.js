@@ -237,7 +237,7 @@ describe('category controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        `The ${req.body.type} with a name of ${req.body.category} was not deleted for the user with the id of ${req.user.id}.`
+        `The ${req.body.type} with a name of ${req.body.category} was not found for the user with the id of ${req.user.id}.`
       );
     });
 

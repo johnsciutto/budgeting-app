@@ -158,15 +158,17 @@ const deleteCategory = async (req, res) => {
 
     if (!storedCategory) {
       status = 404;
-      throw new Error('The given category was not found in the database.');
+      throw new Error(
+        'The given income/category was not found in the database.'
+      );
     }
 
     const result = await user.removeCategory(storedCategory);
 
     if (result !== 1) {
-      status = 400;
+      status = 404;
       throw new Error(
-        `The ${type} with a name of ${category} was not deleted for the user with the id of ${userId}.`
+        `The ${type} with a name of ${category} was not found for the user with the id of ${userId}.`
       );
     }
   } catch (err) {
