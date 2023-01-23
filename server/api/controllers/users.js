@@ -216,11 +216,18 @@ const loginUser = async (req, res) => {
 };
 
 /**
- * Delete a user from the application.
+ * @description - This function deletes a user from the database.
  *
- * @returns {object} response
- * @property {boolean} response.ok
- * @property {string | undefined} response.error
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object | undefined} req.user - The user object
+ * @param {number | undefined} req.user.id - The user's id
+ * @param {Object} res - Express response object
+ * @returns {Object} response - JSON object
+ * @property {boolean} response.ok - Indicates the success or failure of the operation,
+ * @property {string | undefined} response.error - A description of the error. Only
+ *                                                 present if the operation failed.
  */
 const deleteUser = async (req, res) => {
   const response = { ok: true };
