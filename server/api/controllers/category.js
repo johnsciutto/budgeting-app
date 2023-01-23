@@ -1,7 +1,7 @@
 const { Category, User } = require('../../db/models');
 
 const getCategories = async (req, res) => {
-  const response = { ok: true, error: null, categories: null };
+  const response = { ok: true };
   let status = 200;
   try {
     const userId = req.user?.id;
@@ -30,7 +30,7 @@ const getCategories = async (req, res) => {
 };
 
 const addCategory = async (req, res) => {
-  const response = { ok: true, error: null, categories: null };
+  const response = { ok: true };
   let status = 200;
   try {
     const userId = req.user?.id;
@@ -59,14 +59,13 @@ const addCategory = async (req, res) => {
   } catch (err) {
     response.ok = false;
     response.error = err.message;
-    response.categories = null;
     res.status(status);
   }
   return res.json(response);
 };
 
 const deleteCategory = async (req, res) => {
-  const response = { ok: true, error: null };
+  const response = { ok: true };
   let status = 200;
 
   const userId = req.user?.id;

@@ -77,8 +77,6 @@ describe('category controller', () => {
 
     expect(result).toHaveProperty('ok');
     expect(result.ok).toBe(true);
-    expect(result).toHaveProperty('error');
-    expect(result.error).toBe(null);
     expect(result).toHaveProperty('categories');
     expect(result.categories).toMatchObject(mockedGetAllCategoriesResult);
     expect(result.categories.income).toEqual(
@@ -153,8 +151,6 @@ describe('category controller', () => {
 
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(true);
-      expect(result).toHaveProperty('error');
-      expect(result.error).toBe(null);
       expect(result).toHaveProperty('categories');
       expect(result.categories).toMatchObject({
         income: ['Paycheque', 'Business'],
@@ -266,8 +262,6 @@ describe('category controller', () => {
 
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(true);
-      expect(result).toHaveProperty('error');
-      expect(result.error).toBe(null);
     });
   });
 
