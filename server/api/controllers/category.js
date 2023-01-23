@@ -48,6 +48,35 @@ const getCategories = async (req, res) => {
   return res.json(response);
 };
 
+/**
+ * @description - This function is used to add a new category to the database
+ *                for a specific user. It uses the 'userId' property from the
+ *                request object to identify the user, and expects a JSON
+ *                object in the request body with the properties 'type' and
+ *                'category' of the category, and uses the User model method
+ *                to add the category to the user. If the category doesn't
+ *                exists, it will be created.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Object} req.user - The request user
+ * @param {number} req.user.id - The id of the user
+ * @param {Object} req.body - The request body
+ * @param {string} req.body.type - The type of the category
+ * @param {string} req.body.category - The name of the category
+ * @returns {Object} response - JSON object with the following properties:
+ * @property {boolean} response.ok - Indicates the success or failure of the
+ *                                   operation.
+ * @property {string | undefined} response.error - A description of the error.
+ *                                                 Only present if the operation
+ *                                                 failed.
+ * @property {Array | undefined} response.categories - An array of the updated
+ *                                                     categories objects. Only
+ *                                                     present if the operation
+ *                                                     succeeded.
+ */
 const addCategory = async (req, res) => {
   const response = { ok: true };
   let status = 200;
