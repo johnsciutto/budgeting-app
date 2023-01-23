@@ -86,7 +86,7 @@ describe('users controller', () => {
 
   describe('loginUser', () => {
     let req = null;
-    const res = { json: (str) => JSON.stringify(str) };
+    const res = { status: () => null, json: (str) => JSON.stringify(str) };
 
     beforeEach(() => {
       req = {
@@ -130,7 +130,7 @@ describe('users controller', () => {
 
   describe('editUser', () => {
     let req = null;
-    const res = { json: (str) => JSON.stringify(str) };
+    const res = { status: () => null, json: (str) => JSON.stringify(str) };
 
     beforeEach(() => {
       req = {
@@ -259,7 +259,7 @@ describe('users controller', () => {
 
   describe('deleteUser', () => {
     let req = null;
-    const res = { json: (str) => JSON.stringify(str) };
+    const res = { status: () => null, json: (str) => JSON.stringify(str) };
 
     beforeEach(() => {
       req = { params: { userId: 1 } };

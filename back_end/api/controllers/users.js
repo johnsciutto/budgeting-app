@@ -16,6 +16,7 @@ const registerUser = async (req, res) => {
     // check that the username doesn't exist
     const user = await User.findOne({ where: { username } });
     if (user) {
+      status = 409;
       throw new Error(
         'That username is already taken, please choose another one.'
       );
@@ -23,11 +24,13 @@ const registerUser = async (req, res) => {
 
     const emailValidity = Validation.isEmailValid(email);
     if (!emailValidity.ok) {
+      status = 400;
       throw new Error(emailValidity.error);
     }
 
     const passwordValidity = Validation.isPasswordValid(password);
     if (!passwordValidity.ok) {
+      status = 400;
       throw new Error(passwordValidity.error);
     }
 
@@ -49,6 +52,7 @@ const registerUser = async (req, res) => {
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    res.status(status);
   }
   // return the response object with the correct data.
   return res.json(response);
@@ -76,6 +80,7 @@ const editUser = async (req, res) => {
       // check that the new username is not being used.
       const user = await User.findOne({ where: { username } });
       if (user) {
+        status = 409;
         throw new Error(`That username is already taken.`);
       }
       changeObj.username = username;
@@ -88,12 +93,14 @@ const editUser = async (req, res) => {
     }
 
     if ((oldPassword && !newPassword) || (!oldPassword && newPassword)) {
+      status = 400;
       throw new Error('One of the passwords is missing.');
     }
 
     if (oldPassword && newPassword) {
       const isValidPassword = Validation.isPasswordValid(newPassword);
       if (!isValidPassword.ok) {
+        status = 400;
         throw new Error(isValidPassword.error);
       }
 
@@ -102,6 +109,7 @@ const editUser = async (req, res) => {
       const passwordMatches = await Security.isUserPassword(user, oldPassword);
 
       if (!passwordMatches) {
+        status = 403;
         throw new Error('The given (existing) password is not correct.');
       }
 
@@ -119,12 +127,14 @@ const editUser = async (req, res) => {
     });
 
     if (resultCount !== 1) {
+      status = 400;
       throw new Error('The user data was not updated.');
     }
     response.ok = true;
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    res.status(status);
   }
 
   return res.json(response);
@@ -146,11 +156,13 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ where: { username } });
     if (!user) {
+      status = 401;
       throw new Error('Invalid username or password');
     }
 
     const isCorrectPassword = await Security.isUserPassword(user, password);
     if (!isCorrectPassword) {
+      status = 401;
       throw new Error(`Invalid username or password`);
     }
 
@@ -159,6 +171,7 @@ const loginUser = async (req, res) => {
   } catch (error) {
     response.ok = false;
     response.error = error.message;
+    res.status(status);
   }
 
   return res.json(response);
@@ -177,11 +190,13 @@ const deleteUser = async (req, res) => {
 
   try {
     if (!userId) {
+      status = 400;
       throw new Error(`The userId is incorrect: ${userId}`);
     }
 
     const user = await User.findByPk(userId);
     if (!user) {
+      status = 404;
       throw new Error(`No user was found with the given id: ${userId}`);
     }
 
@@ -192,11 +207,13 @@ const deleteUser = async (req, res) => {
     });
 
     if (result === 0) {
+      status = 400;
       throw new Error('The operation to delete the user failed.');
     }
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    res.status(status);
   }
 
   return res.json(response);
