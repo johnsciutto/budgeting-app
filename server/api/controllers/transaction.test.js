@@ -329,7 +329,7 @@ describe('transaction controller', () => {
       expect(result1.ok).toBe(false);
       expect(result1).toHaveProperty('error');
       expect(result1.error).toBe(
-        'The transactionId should be a number, instead got: string'
+        'The transactionId should be a number, instead got: NaN'
       );
 
       req.params.transactionId = true;
@@ -339,7 +339,7 @@ describe('transaction controller', () => {
       expect(result2.ok).toBe(false);
       expect(result2).toHaveProperty('error');
       expect(result2.error).toBe(
-        'The transactionId should be a number, instead got: boolean'
+        'The transactionId should be a number, instead got: NaN'
       );
     });
 
@@ -352,7 +352,7 @@ describe('transaction controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        'The transaction with the id: 1 was not deleted from the database'
+        'The transaction with the id: 1 was not found in the database'
       );
     });
 
@@ -395,7 +395,7 @@ describe('transaction controller', () => {
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(
-        'Expected transactionId to be a number, received: string'
+        'Expected transactionId to be a number, received: testing'
       );
     });
 

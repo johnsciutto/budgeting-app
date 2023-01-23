@@ -23,8 +23,10 @@ const addTransaction = async (req, res) => {
   const response = { ok: true };
   let status = 200;
   try {
-    const { name, amount, date, note, type, category } = req.body;
+    const { name, amount, date: rawDate, note, type, category } = req.body;
     const userId = req.user?.id;
+
+    const date = new Date(rawDate);
 
     const isValid = Validation.isValidTransaction({ name, amount, date, note });
     if (!isValid.ok) {
@@ -100,10 +102,12 @@ const editTransaction = async (req, res) => {
       throw new Error(`No transactionId was passed`);
     }
 
-    if (typeof transactionId !== 'number') {
+    const parsedTransactionId = parseInt(transactionId);
+
+    if (isNaN(parsedTransactionId)) {
       status = 400;
       throw new Error(
-        `Expected transactionId to be a number, received: ${typeof transactionId}`
+        `Expected transactionId to be a number, received: ${transactionId}`
       );
     }
 
@@ -184,12 +188,12 @@ const deleteTransaction = async (req, res) => {
   let status = 200;
   try {
     const userId = req.user?.id;
-    const transactionId = req.params.transactionId;
+    const transactionId = parseInt(req.params.transactionId);
 
-    if (typeof transactionId !== 'number') {
+    if (isNaN(transactionId)) {
       status = 400;
       throw new Error(
-        `The transactionId should be a number, instead got: ${typeof transactionId}`
+        `The transactionId should be a number, instead got: ${transactionId}`
       );
     }
 
@@ -198,9 +202,9 @@ const deleteTransaction = async (req, res) => {
       logging: true,
     });
     if (result === 0) {
-      status = 400;
+      status = 404;
       throw new Error(
-        `The transaction with the id: ${transactionId} was not deleted from the database`
+        `The transaction with the id: ${transactionId} was not found in the database`
       );
     }
   } catch (err) {
