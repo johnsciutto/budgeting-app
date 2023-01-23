@@ -12,7 +12,7 @@ const { Security } = require('../../utils/security');
  */
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
-  const response = { ok: false, error: null };
+  const response = { ok: false };
   try {
     // check that the username doesn't exist
     const user = await User.findOne({ where: { username } });
@@ -32,17 +32,10 @@ const registerUser = async (req, res) => {
       throw new Error(passwordValidity.error);
     }
 
-    // hash the password.
-    const hashedPassword = await Security.hashPassword(password);
-    // Store the user with the username, the email and the hashedPassword in the database.
-    if (!hashedPassword.ok) {
-      throw new Error(hashedPassword.error);
-    }
-
     const newUser = await User.create({
       username,
       email,
-      password: hashedPassword.password,
+      password,
     });
 
     response.ok = true;
@@ -51,7 +44,7 @@ const registerUser = async (req, res) => {
 
     res.setHeader('Authorization', `Bearer ${token}`);
 
-    delete response.error
+    delete response.error;
     response.token = token;
   } catch (err) {
     response.ok = false;
@@ -72,7 +65,7 @@ const registerUser = async (req, res) => {
  * @property {string | null} response.error
  */
 const editUser = async (req, res) => {
-  const response = { ok: true, error: null };
+  const response = { ok: true };
   try {
     const { username, email, oldPassword, newPassword } = req.body;
     const userId = req.user?.id;
@@ -112,13 +105,7 @@ const editUser = async (req, res) => {
         throw new Error('The given (existing) password is not correct.');
       }
 
-      const hashedPassword = await Security.hashPassword(newPassword);
-
-      if (!hashedPassword.ok) {
-        throw new Error(hashedPassword.error);
-      }
-
-      changeObj.password = hashedPassword.password;
+      changeObj.password = newPassword;
     }
 
     const [resultCount] = await User.update(changeObj, {
@@ -148,7 +135,7 @@ const editUser = async (req, res) => {
  */
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
-  const response = { ok: true, error: null, userId: null };
+  const response = { ok: true };
 
   try {
     const user = await User.findOne({ where: { username } });
@@ -183,7 +170,7 @@ const loginUser = async (req, res) => {
  * @property {string | null} response.error
  */
 const deleteUser = async (req, res) => {
-  const response = { ok: true, error: null };
+  const response = { ok: true };
   const userId = req.user?.id;
 
   try {
