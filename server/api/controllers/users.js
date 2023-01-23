@@ -13,6 +13,7 @@ const { Security } = require('../../utils/security');
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
   const response = { ok: false };
+  let status = 200;
   try {
     // check that the username doesn't exist
     const user = await User.findOne({ where: { username } });
@@ -70,6 +71,7 @@ const registerUser = async (req, res) => {
  */
 const editUser = async (req, res) => {
   const response = { ok: true };
+  let status = 200;
   try {
     const { username, email, oldPassword, newPassword } = req.body;
     const userId = req.user?.id;
@@ -146,6 +148,7 @@ const editUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
   const response = { ok: true };
+  let status = 200;
 
   try {
     const user = await User.findOne({ where: { username } });
@@ -185,6 +188,7 @@ const loginUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const response = { ok: true };
   const userId = req.user?.id;
+  let status = 200;
 
   try {
     if (!userId) {
