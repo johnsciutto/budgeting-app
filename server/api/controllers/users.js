@@ -52,7 +52,6 @@ const registerUser = async (req, res) => {
 
     res.setHeader('Authorization', `Bearer ${token}`);
 
-    delete response.error;
     response.token = token;
   } catch (err) {
     response.ok = false;
@@ -130,7 +129,6 @@ const editUser = async (req, res) => {
       status = 400;
       throw new Error('The user data was not updated.');
     }
-    response.ok = true;
   } catch (err) {
     response.ok = false;
     response.error = err.message;
@@ -171,7 +169,6 @@ const loginUser = async (req, res) => {
 
     res.setHeader('Authorization', `Bearer ${token}`);
 
-    response.ok = true;
     response.token = token;
   } catch (error) {
     response.ok = false;
