@@ -4,15 +4,26 @@ const { Validation } = require('../../utils/validation');
 const { Security } = require('../../utils/security');
 
 /**
- * Register a new user into the system.
+ * @description - This function is used to register a new user by creating a new
+ *                User object in the database. It expects a JSON object in the
+ *                request body with the properties 'username', 'email', and
+ *                'password' of the new user.
  *
+ * @function
  * @async
- * @param {object} req - the request
- * @param {object} res - the response
- * @returns {object} response
- * @property {boolean} response.ok
- * @property {string | undefined} response.token
- * @property {string | undefined} response.error
+ * @param {Object} req - Express request object
+ * @param {Object} req.body - The request body
+ * @param {string} req.body.username - The new user's username
+ * @param {string} req.body.email - The new user's email
+ * @param {string} req.body.password - The new user's password
+ * @param {Object} res - Express response object
+ * @returns {Object} response - JSON object with the following properties:
+ * @property {boolean} response.ok - Indicates the success or failure of the operation.
+ * @property {string | undefined} response.error - A description of the error. Only
+ *                                                 present if the operation failed.
+ * @property {string | undefined} response.token - A JSON web token that can be used
+ *                                                 for authentication. Only present if
+ *                                                 the operation succeeded.
  */
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -58,7 +69,7 @@ const registerUser = async (req, res) => {
     response.error = err.message;
     res.status(status);
   }
-  // return the response object with the correct data.
+
   return res.json(response);
 };
 
