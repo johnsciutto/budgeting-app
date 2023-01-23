@@ -13,6 +13,7 @@ const { Validation } = require('../../utils/validation');
 
 describe('transaction controller', () => {
   const res = {
+    status: () => null,
     json: (str) => JSON.stringify(str),
   };
 
@@ -22,7 +23,7 @@ describe('transaction controller', () => {
     beforeEach(() => {
       req = {
         user: {
-          id: 1
+          id: 1,
         },
         body: {
           date: new Date(),
@@ -114,17 +115,12 @@ describe('transaction controller', () => {
     });
   });
 
-  describe('editTransaction', () => {
-    test.todo('...');
-  });
-
-  describe('deleteTransaction', () => {
-    test.todo('...');
-  });
-
   describe('getTransaction', () => {
     let req = null;
-    const res = { json: (str) => JSON.stringify(str) };
+    const res = {
+      status: () => null,
+      json: (str) => JSON.stringify(str),
+    };
 
     beforeEach(() => {
       req = {
@@ -132,8 +128,8 @@ describe('transaction controller', () => {
           transactionId: 1,
         },
         user: {
-          id: 1
-        }
+          id: 1,
+        },
       };
     });
 
@@ -211,7 +207,10 @@ describe('transaction controller', () => {
 
   describe('getTransactions', () => {
     let req = null;
-    const res = { json: (str) => JSON.stringify(str) };
+    const res = {
+      status: () => null,
+      json: (str) => JSON.stringify(str),
+    };
 
     beforeEach(() => {
       req = {
@@ -314,6 +313,7 @@ describe('transaction controller', () => {
   describe('deleteTransaction', () => {
     let req = null;
     const res = {
+      status: () => null,
       json: (str) => JSON.stringify(str),
     };
 
@@ -375,6 +375,7 @@ describe('transaction controller', () => {
   describe('editTransaction', () => {
     let req = null;
     const res = {
+      status: () => null,
       json: (str) => JSON.stringify(str),
     };
 
@@ -436,14 +437,18 @@ describe('transaction controller', () => {
       expect(result).toHaveProperty('ok');
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty('error');
-      expect(result.error).toBe(`The given ${req.body.type} category was not found: ${req.body.category}`);
+      expect(result.error).toBe(
+        `The given ${req.body.type} category was not found: ${req.body.category}`
+      );
     });
 
     test('should update the transaction with the new type and category', async () => {
       req.body.type = 'expense';
       req.body.category = 'Takeout';
 
-      jest.spyOn(Category, 'findOne').mockResolvedValue({ id: 5, type: 'expense', name: 'Takeout'});
+      jest
+        .spyOn(Category, 'findOne')
+        .mockResolvedValue({ id: 5, type: 'expense', name: 'Takeout' });
       jest.spyOn(Transaction, 'update').mockResolvedValue(1);
 
       const result = JSON.parse(await editTransaction(req, res));
@@ -452,7 +457,7 @@ describe('transaction controller', () => {
       expect(result.ok).toBe(true);
       expect(result).toHaveProperty('error');
       expect(result.error).toBe(null);
-    })
+    });
 
     test('should update the properties of an object in the database successfully', async () => {
       req.body.amount = 120.5;

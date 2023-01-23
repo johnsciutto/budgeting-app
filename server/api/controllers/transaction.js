@@ -4,12 +4,14 @@ const { DataPreparation } = require('../../utils/dataPreparation');
 
 const addTransaction = async (req, res) => {
   const response = { ok: true, error: null, transactionId: null };
+  let status = 200;
   try {
     const { name, amount, date, note, type, category } = req.body;
     const userId = req.user?.id;
 
     const isValid = Validation.isValidTransaction({ name, amount, date, note });
     if (!isValid.ok) {
+      status = 400;
       throw new Error(isValid.error);
     }
 
@@ -18,6 +20,7 @@ const addTransaction = async (req, res) => {
     });
 
     if (!dbCategory) {
+      status = 404;
       throw new Error(
         `The "${type}" category of "${category}" was not found in the database.`
       );
@@ -37,22 +40,26 @@ const addTransaction = async (req, res) => {
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    res.status(status);
   }
   return res.json(response);
 };
 
 const editTransaction = async (req, res) => {
   const response = { ok: true, error: null };
+  let status = 200;
   try {
     const userId = req.user?.id;
     const { transactionId } = req.params;
     const { date, name, amount, type, category, note } = req.body;
 
     if (transactionId === undefined) {
+      status = 400;
       throw new Error(`No transactionId was passed`);
     }
 
     if (typeof transactionId !== 'number') {
+      status = 400;
       throw new Error(
         `Expected transactionId to be a number, received: ${typeof transactionId}`
       );
@@ -73,6 +80,7 @@ const editTransaction = async (req, res) => {
       Validation.isValidPartialTransaction(updatedProperties);
 
     if (!validationResult.ok) {
+      status = 400;
       throw new Error(validationResult.error);
     }
 
@@ -85,6 +93,7 @@ const editTransaction = async (req, res) => {
       });
 
       if (!updateCategory) {
+        status = 404;
         throw new Error(
           `The given ${updatedProperties.type} category was not found: ${updatedProperties.category}`
         );
@@ -106,17 +115,20 @@ const editTransaction = async (req, res) => {
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    res.status(status);
   }
   return res.json(response);
 };
 
 const deleteTransaction = async (req, res) => {
   const response = { ok: true, error: null };
+  let status = 200;
   try {
     const userId = req.user?.id;
     const transactionId = req.params.transactionId;
 
     if (typeof transactionId !== 'number') {
+      status = 400;
       throw new Error(
         `The transactionId should be a number, instead got: ${typeof transactionId}`
       );
@@ -127,6 +139,7 @@ const deleteTransaction = async (req, res) => {
       logging: true,
     });
     if (result === 0) {
+      status = 400;
       throw new Error(
         `The transaction with the id: ${transactionId} was not deleted from the database`
       );
@@ -134,29 +147,34 @@ const deleteTransaction = async (req, res) => {
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    res.status(status);
   }
   return res.json(response);
 };
 
 const getTransaction = async (req, res) => {
   const response = { ok: true, error: null, transaction: null };
+  let status = 200;
   try {
     const userId = req.user?.id;
     const transactionId = parseInt(req.params.transactionId);
 
     if (isNaN(transactionId)) {
+      status = 400;
       throw new Error(
         `The given transaction id is invalid: ${req.params.transactionId}`
       );
     }
 
     if (!transactionId) {
+      status = 400;
       throw new Error(`The given transaction id is invalid: ${transactionId}`);
     }
 
     const transaction = await Transaction.findById(transactionId);
 
     if (transaction?.userId !== userId) {
+      status = 404;
       throw new Error(
         `The transaction with the given id (${transactionId}) was not found.`
       );
@@ -166,12 +184,14 @@ const getTransaction = async (req, res) => {
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    res.status(status);
   }
   return res.json(response);
 };
 
 const getTransactions = async (req, res) => {
   const response = { ok: true, error: null, transactions: null };
+  let status = 200;
   try {
     const rawData = {
       userId: req.user?.id,
@@ -180,6 +200,7 @@ const getTransactions = async (req, res) => {
     const filter = DataPreparation.createTransactionFilter(rawData);
 
     if (!filter.ok) {
+      status = 400;
       throw new Error(filter.error);
     }
 
@@ -191,6 +212,7 @@ const getTransactions = async (req, res) => {
   } catch (err) {
     response.ok = false;
     response.error = err.message;
+    res.status(status);
   }
   return res.json(response);
 };
