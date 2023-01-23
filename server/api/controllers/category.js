@@ -1,5 +1,24 @@
 const { Category, User } = require('../../db/models');
 
+/**
+ * @description - This function is used to retrieve all categories from the
+ *                database of a specific user. It uses the 'userId' property
+ *                from the request object to identify the user and then it
+ *                retrieves all the categories from the database.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Object} req.user - The request user
+ * @param {number} req.user.id - The id of the user
+ * @returns {Object} response - JSON object with the following properties:
+ * @property {boolean} response.ok - Indicates the success or failure of the operation.
+ * @property {string | undefined} response.error - A description of the error.
+ *                                                 Only present if the operation failed.
+ * @property {Array | undefined} response.categories - An array of the categories objects.
+ *                                                     Only present if the operation succeeded.
+ */
 const getCategories = async (req, res) => {
   const response = { ok: true };
   let status = 200;
