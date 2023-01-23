@@ -9,6 +9,10 @@ const { Security } = require('../../utils/security');
  * @async
  * @param {object} req - the request
  * @param {object} res - the response
+ * @returns {object} response
+ * @property {boolean} response.ok
+ * @property {string | undefined} response.token
+ * @property {string | undefined} response.error
  */
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
@@ -67,7 +71,7 @@ const registerUser = async (req, res) => {
  * @param {object} res
  * @returns {object} response
  * @property {boolean} response.ok
- * @property {string | null} response.error
+ * @property {string | undefined} response.error
  */
 const editUser = async (req, res) => {
   const response = { ok: true };
@@ -142,8 +146,8 @@ const editUser = async (req, res) => {
  * @async
  * @returns {object} response
  * @property {boolean} response.ok
- * @property {string | null} response.error
- * @property {string | null} response.userId
+ * @property {string | undefined} response.error
+ * @property {string | undefined} response.token
  */
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
@@ -183,7 +187,7 @@ const loginUser = async (req, res) => {
  *
  * @returns {object} response
  * @property {boolean} response.ok
- * @property {string | null} response.error
+ * @property {string | undefined} response.error
  */
 const deleteUser = async (req, res) => {
   const response = { ok: true };
