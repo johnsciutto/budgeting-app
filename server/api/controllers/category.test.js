@@ -5,6 +5,7 @@ const { getCategories, addCategory, deleteCategory } = require('./category');
 describe('category controller', () => {
   let req = null;
   const res = {
+    status: () => null,
     json: (str) => JSON.stringify(str),
   };
 
