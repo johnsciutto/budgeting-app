@@ -268,6 +268,38 @@ const getTransaction = async (req, res) => {
   return res.json(response);
 };
 
+/**
+ * @description - This function is used to retrieve multiple transactions from
+ *                the database. It uses the 'userId' property from the request
+ *                object to check that the user is the owner of the transactions
+ *                and it uses the query parameters to filter the transactions.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Object} req.query - The request query parameters
+ * @param {number | undefined} req.query.amount - The amount of the transactions
+ * @param {number | undefined} req.query.maxAmount - The maximum amount of the transactions
+ * @param {number | undefined} req.query.minAmount - The minimum amount of the transactions
+ * @param {string | undefined} req.query.category - The category of the transactions
+ * @param {string | undefined} req.query.type - The type of the transactions
+ * @param {string | undefined} req.query.name - The name of the transactions
+ * @param {string | undefined} req.query.note - The note of the transactions
+ * @param {string | undefined} req.query.fromDate - The start date of the transactions
+ * @param {string | undefined} req.query.toDate - The end date of the transactions
+ * @returns {Object} response - JSON object with the following properties:
+ * @property {boolean} response.ok - Indicates the success or failure of the operation.
+ * @property {string | undefined} response.error - A description of the error. Only
+ *                                                 present if the operation failed.
+ * @property {Array | undefined} response.transactions - An array of the transactions
+ *                                                       objects. Only present if the
+ *                                                       operation succeeded.
+ * @property {number | undefined} response.transactionCount - A number indicating the
+ *                                                            number of transactions
+ *                                                            returned. Only present
+ *                                                            if the operation succeeded.
+ */
 const getTransactions = async (req, res) => {
   const response = { ok: true };
   let status = 200;
