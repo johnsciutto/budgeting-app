@@ -62,6 +62,31 @@ const addTransaction = async (req, res) => {
   return res.json(response);
 };
 
+/**
+ * @description - This function is used to edit an existing transaction in the database.
+ *                It expects a JSON object in the request body with the properties of the
+ *                transaction to be updated and the 'transactionId' as a parameter in the
+ *                request. It uses the 'userId' property from the request object to check
+ *                that the user is the owner of the transaction.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Object} req.params - The request parameters
+ * @param {number} req.params.transactionId - The id of the transaction to be updated
+ * @param {Object} req.body - The request body
+ * @param {string} req.body.date - The new date of the transaction
+ * @param {string} req.body.name - The new name of the transaction
+ * @param {number} req.body.amount - The new amount of the transaction
+ * @param {string} req.body.type - The new type of the transaction's category
+ * @param {string} req.body.category - The new category of the transaction
+ * @param {string} req.body.note - The new note of the transaction
+ * @returns {Object} response - JSON object with
+ * @property {boolean} response.ok - Indicates the success or failure of the operation.
+ * @property {string | undefined} response.error - A description of the error. Only present
+ *                                                 if the operation failed.
+ */
 const editTransaction = async (req, res) => {
   const response = { ok: true };
   let status = 200;
