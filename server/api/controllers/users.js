@@ -59,7 +59,7 @@ const registerUser = async (req, res) => {
 
     response.ok = true;
 
-    const token = jwt.sign({ userId: newUser.id }, process.env.TOKEN_SECRET);
+    const token = Security.generateToken(newUser.id)
 
     res.setHeader('Authorization', `Bearer ${token}`);
 
